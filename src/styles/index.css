@@ -1,8 +1,34 @@
-@import "./theme.css";
+/* src/styles/index.css */
 
-.container {
-  @apply mx-auto max-w-6xl px-4;
+@import "tailwindcss";
+
+/* Thème clair/sombre via variables CSS */
+:root {
+  --bg: #ffffff;
+  --text: #0f172a;
+  --card: #f8fafc;
+  --primary: #2563eb;
 }
-.card {
-  @apply rounded-lg p-4 shadow-sm bg-card;
+.dark {
+  --bg: #0b1020;
+  --text: #e5e7eb;
+  --card: #111827;
+  --primary: #60a5fa;
+}
+
+html, body, #app {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Utilitaire custom façon Tailwind v4 */
+@utility card {
+  @apply rounded-lg p-4 shadow-sm;
+  background: var(--card);
+}
+
+/* Conteneur réutilisable (utilise un utilitaire existant pour la largeur écran) */
+@utility cp-container {
+  @apply mx-auto max-w-screen-xl px-4;
 }

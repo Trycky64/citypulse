@@ -8,14 +8,14 @@
 # SECTION A — INITIAL SETUP
 # =========================
 P1
-[ ] A.01 Init repo "citypulse" (Vite + Vue 3 + TS + Router + Pinia + Vitest)
-[ ] A.02 Configure ESLint + Prettier + TypeScript strict
-[ ] A.03 Add TailwindCSS + PostCSS + autoprefixer
-[ ] A.04 Init project structure (src/, components/, features/, stores/, services/, pages/, assets/)
-[ ] A.05 Create .env.example + README.md (minimal setup instructions)
-[ ] A.06 Configure base routes ("/", "/city/:id", "/compare", "/favorites")
-[ ] A.07 Setup global theme (dark/light) + CSS variables
-[ ] A.08 Setup GitHub repo + initial commit + GitHub Actions (lint/test/build)
+[x] A.01 Init repo "citypulse" (Vite + Vue 3 + TS + Router + Pinia + Vitest)
+[x] A.02 Configure ESLint + Prettier + TypeScript strict
+[x] A.03 Add TailwindCSS + PostCSS + autoprefixer
+[x] A.04 Init project structure (src/, components/, features/, stores/, services/, pages/, assets/)
+[x] A.05 Create .env.example + README.md (minimal setup instructions)
+[x] A.06 Configure base routes ("/", "/city/:id", "/compare", "/favorites")
+[x] A.07 Setup global theme (dark/light) + CSS variables
+[x] A.08 Setup GitHub repo + initial commit + GitHub Actions (lint/test/build)
 
 # =========================
 # SECTION B — CORE SYSTEM (MVP)

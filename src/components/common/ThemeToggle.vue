@@ -6,5 +6,5 @@ const toggle = () => {
 </script>
 
 <template>
-  <button class="px-3 py-1 rounded bg-primary text-white" @click="toggle">Toggle Theme</button>
+  <button class="px-3 py-1 rounded bg-[var(--primary)] text-white" @click="toggle">Toggle Theme</button>
 </template>
