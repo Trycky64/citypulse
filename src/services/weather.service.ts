@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { WeatherSummary } from "@/types/weather";
 import { http } from "./http";
+import { cacheSWR } from "./cache";
 
 // https://open-meteo.com/en/docs
 const Schema = z.object({
@@ -22,7 +23,10 @@ const Schema = z.object({
 });
 
 export async function getWeather(lat: number, lon: number): Promise<WeatherSummary> {
-  const { data } = await http.get("/api/weather", { params: { lat, lon } });
+  const key = `weather:${lat.toFixed(3)},${lon.toFixed(3)}`;
+  const ttl = 24 * 60 * 60 * 1000; // 24h
+  return cacheSWR(key, async () => {
+    const { data } = await http.get("/api/weather", { params: { lat, lon } });
 
   const p = Schema.parse(data);
 
@@ -53,12 +57,13 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherSumma
     hourly.push({ time: H.time[i]!, temp: H.temperature_2m[i]!, precipMm: H.precipitation[i]! });
   }
 
-  return {
-    now: {
-      temp: p.current.temperature_2m,
-      feels: p.current.apparent_temperature ?? p.current.temperature_2m,
-    },
-    daily,
-    hourly,
-  };
+    return {
+      now: {
+        temp: p.current.temperature_2m,
+        feels: p.current.apparent_temperature ?? p.current.temperature_2m,
+      },
+      daily,
+      hourly,
+    };
+  }, ttl);
 }

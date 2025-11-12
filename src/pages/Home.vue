@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import CitySearch from "@/features/search/CitySearch.vue";
+import PreferencesPanel from "@/components/common/PreferencesPanel.vue";
 </script>
 
 <template>
@@ -9,5 +10,6 @@ import CitySearch from "@/features/search/CitySearch.vue";
     <div class="max-w-md">
       <CitySearch :navigateOnSelect="true" />
     </div>
+    <PreferencesPanel class="mt-6 max-w-md" />
   </main>
 </template>
