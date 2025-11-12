@@ -63,24 +63,24 @@ P1
 # SECTION D — UI & UX ENHANCEMENTS
 # =========================
 P2
-[ ] D.01 Charts (Chart.js / vue-chartjs)
-    [ ] D.01.a Temperature min/max (7j)
-    [ ] D.01.b Pollution timeline (PM2.5, PM10)
-[ ] D.02 Teleport scores section (radial bars)
-[ ] D.03 Population & metadata (country, lat/lon)
-[ ] D.04 Favorites system
-    [ ] D.04.a Pin city to favorites
-    [ ] D.04.b Store in Pinia persist + localStorage
-    [ ] D.04.c Favorites page ("/favorites")
-[ ] D.05 Local cache (IndexedDB)
-    [ ] D.05.a Cache weather/air for 24h
-    [ ] D.05.b Implement stale-while-revalidate strategy
-[ ] D.06 User preferences
-    [ ] D.06.a Temperature unit (°C/°F)
-    [ ] D.06.b Default city
-    [ ] D.06.c Language (FR/EN)
-[ ] D.07 Accessibility (ARIA roles, keyboard navigation)
-[ ] D.08 Visual polish (animations, transitions, icons)
+[x] D.01 Charts (Chart.js / vue-chartjs)
+    [x] D.01.a Temperature min/max (7j)
+    [x] D.01.b Pollution timeline (PM2.5, PM10)
+[x] D.02 Teleport scores section (radial bars)
+[x] D.03 Population & metadata (country, lat/lon)
+[x] D.04 Favorites system
+    [x] D.04.a Pin city to favorites
+    [x] D.04.b Store in Pinia persist + localStorage
+    [x] D.04.c Favorites page ("/favorites")
+[x] D.05 Local cache (IndexedDB)
+    [x] D.05.a Cache weather/air for 24h
+    [x] D.05.b Implement stale-while-revalidate strategy
+[x] D.06 User preferences
+    [x] D.06.a Temperature unit (°C/°F)
+    [x] D.06.b Default city
+    [x] D.06.c Language (FR/EN)
+[x] D.07 Accessibility (ARIA roles, keyboard navigation)
+[x] D.08 Visual polish (animations, transitions, icons)
 
 # =========================
 # SECTION E — PWA & OFFLINE
