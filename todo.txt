@@ -1,0 +1,145 @@
+# ============================================
+# PROJECT: CityPulse
+# TYPE: Web (Vue 3 + TS + APIs + DataViz)
+# AUTHOR: Quentin Perriere
+# ============================================
+
+# =========================
+# SECTION A — INITIAL SETUP
+# =========================
+P1
+[ ] A.01 Init repo "citypulse" (Vite + Vue 3 + TS + Router + Pinia + Vitest)
+[ ] A.02 Configure ESLint + Prettier + TypeScript strict
+[ ] A.03 Add TailwindCSS + PostCSS + autoprefixer
+[ ] A.04 Init project structure (src/, components/, features/, stores/, services/, pages/, assets/)
+[ ] A.05 Create .env.example + README.md (minimal setup instructions)
+[ ] A.06 Configure base routes ("/", "/city/:id", "/compare", "/favorites")
+[ ] A.07 Setup global theme (dark/light) + CSS variables
+[ ] A.08 Setup GitHub repo + initial commit + GitHub Actions (lint/test/build)
+
+# =========================
+# SECTION B — CORE SYSTEM (MVP)
+# =========================
+P1
+[ ] B.01 Implement City Search (auto-complete input)
+    [ ] B.01.a Service: geo.service.ts (GeoDB / Nominatim)
+    [ ] B.01.b Debounce requests + keyboard navigation
+    [ ] B.01.c Display city list dropdown + click/select action
+[ ] B.02 Create City page ("/city/:id")
+    [ ] B.02.a Weather card (temp, feels, condition)
+    [ ] B.02.b Air quality card (AQI + category)
+    [ ] B.02.c Map (Leaflet centered on city)
+[ ] B.03 Implement Compare page ("/compare")
+    [ ] B.03.a Search + add 2 cities
+    [ ] B.03.b Display side-by-side comparison (Weather + Air)
+[ ] B.04 Error handling system
+    [ ] B.04.a Axios interceptor + retry (exponential backoff)
+    [ ] B.04.b Display toast notifications for errors
+[ ] B.05 Global loading + skeleton components
+[ ] B.06 Responsive layout (mobile-first)
+[ ] B.07 Unit tests (Vitest) for geo.service + weather.service + air.service
+[ ] B.08 E2E test basic flow (Playwright): search → select city → display results
+
+# =========================
+# SECTION C — API INTEGRATIONS
+# =========================
+P1
+[ ] C.01 Weather API (Open-Meteo / OpenWeather)
+    [ ] C.01.a weather.service.ts (normalize to WeatherSummary)
+    [ ] C.01.b Handle daily + hourly data
+[ ] C.02 Air Quality API (OpenAQ)
+    [ ] C.02.a air.service.ts (normalize to AirQuality model)
+    [ ] C.02.b Compute AQI category (Good / Moderate / Unhealthy / etc.)
+[ ] C.03 City Info API (Teleport Urban Areas)
+    [ ] C.03.a teleport.service.ts (fetch scores, cost of living)
+    [ ] C.03.b Handle missing data gracefully
+[ ] C.04 Proxy backend (optional)
+    [ ] C.04.a Setup Hono (Cloudflare Workers) or Fastify
+    [ ] C.04.b Routes: /api/weather /api/air /api/city /api/teleport
+    [ ] C.04.c Add rate-limit + sanitization
+[ ] C.05 Type validation with zod for all responses
+
+# =========================
+# SECTION D — UI & UX ENHANCEMENTS
+# =========================
+P2
+[ ] D.01 Charts (Chart.js / vue-chartjs)
+    [ ] D.01.a Temperature min/max (7j)
+    [ ] D.01.b Pollution timeline (PM2.5, PM10)
+[ ] D.02 Teleport scores section (radial bars)
+[ ] D.03 Population & metadata (country, lat/lon)
+[ ] D.04 Favorites system
+    [ ] D.04.a Pin city to favorites
+    [ ] D.04.b Store in Pinia persist + localStorage
+    [ ] D.04.c Favorites page ("/favorites")
+[ ] D.05 Local cache (IndexedDB)
+    [ ] D.05.a Cache weather/air for 24h
+    [ ] D.05.b Implement stale-while-revalidate strategy
+[ ] D.06 User preferences
+    [ ] D.06.a Temperature unit (°C/°F)
+    [ ] D.06.b Default city
+    [ ] D.06.c Language (FR/EN)
+[ ] D.07 Accessibility (ARIA roles, keyboard navigation)
+[ ] D.08 Visual polish (animations, transitions, icons)
+
+# =========================
+# SECTION E — PWA & OFFLINE
+# =========================
+P3
+[ ] E.01 Add PWA support (manifest.json + icons)
+[ ] E.02 Configure service worker (Workbox)
+    [ ] E.02.a Cache static assets
+    [ ] E.02.b Cache API responses (weather/air)
+[ ] E.03 Add “offline mode” banner
+[ ] E.04 Test installation (desktop + mobile)
+[ ] E.05 Lighthouse target: 90+ Perf / A11y / Best Practices / SEO
+
+# =========================
+# SECTION F — EXPORT & SHARING
+# =========================
+P3
+[ ] F.01 Shareable compare URLs (query params → 2 cities)
+[ ] F.02 Export city report (PDF / print)
+[ ] F.03 Copy link / QR code generation (optional)
+
+# =========================
+# SECTION G — TESTS & QA
+# =========================
+P1/P2/P3
+[ ] G.01 Unit tests coverage >80%
+[ ] G.02 E2E full flow tests (Playwright)
+[ ] G.03 Lighthouse audits (Desktop & Mobile)
+[ ] G.04 Manual tests: mobile responsiveness, dark mode, offline mode
+[ ] G.05 Cross-browser check (Chrome, Firefox, Edge)
+
+# =========================
+# SECTION H — DEPLOYMENT & CI/CD
+# =========================
+P3
+[ ] H.01 GitHub Actions
+    [ ] H.01.a Lint & test on push
+    [ ] H.01.b Build + deploy job
+[ ] H.02 Deployment (Cloudflare Pages / Netlify)
+[ ] H.03 Optional: backend proxy on Cloudflare Workers
+[ ] H.04 Add Sentry (error logging)
+[ ] H.05 Add analytics (Plausible / Fathom)
+[ ] H.06 Version bump + changelog
+
+# =========================
+# SECTION I — DOCUMENTATION & ASSETS
+# =========================
+P1 → P3
+[ ] I.01 README.md complet (intro, stack, setup, APIs, captures)
+[ ] I.02 docs/ folder (technical-structure.md, api-sources.md, ui-design.md)
+[ ] I.03 Screenshots (desktop + mobile)
+[ ] I.04 Feature table P1/P2/P3 (checked at each milestone)
+[ ] I.05 License (MIT)
+[ ] I.06 CHANGELOG.md auto-generated (git-cliff ou release-please)
+
+# =========================
+# SECTION J — DELIVERY MILESTONES
+# =========================
+[ ] J.01 Phase 1 (MVP) validation — ✅ city search, weather, air, map, compare
+[ ] J.02 Phase 2 (UX & cache) validation — ✅ charts, favorites, teleport, cache
+[ ] J.03 Phase 3 (PWA & polish) validation — ✅ offline, export, deploy
+[ ] J.04 Final delivery package (ZIP + README + screenshots + Lighthouse report)
