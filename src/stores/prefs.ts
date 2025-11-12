@@ -19,6 +19,8 @@ export const usePrefs = defineStore("prefs", {
       if(i>=0) this.favorites.splice(i,1); else this.favorites.push(c);
       this.persist();
     },
+    isFav(c: CityRef){ return this.favorites.some(x=>x.lat===c.lat && x.lon===c.lon && x.name===c.name); },
+    isDefault(c: CityRef){ return !!(this.defaultCity && this.defaultCity.lat===c.lat && this.defaultCity.lon===c.lon && this.defaultCity.name===c.name); },
     persist(){
       localStorage.setItem("citypulse_prefs", JSON.stringify({
         tempUnit: this.tempUnit, language: this.language,

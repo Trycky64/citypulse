@@ -9,6 +9,8 @@ const props = defineProps<{ placeholder?: string; navigateOnSelect?: boolean; on
 const router = useRouter();
 
 const q = ref("");
+const listId = "citysearch-list";
+const highlightedId = computed(()=> highlighted.value>=0 ? `opt-${highlighted.value}` : undefined);
 const results = ref<City[]>([]);
 const open = ref(false);
 const highlighted = ref(-1);
@@ -46,6 +48,7 @@ function onKeydown(e: KeyboardEvent) {
       e.preventDefault();
     }
   } else if (e.key === "Enter" && highlighted.value >= 0) {
+    e.preventDefault();
     const sel = results.value[highlighted.value];
     if (sel) pick(sel);
   } else if (e.key === "Escape") {
@@ -81,19 +84,27 @@ const has = computed(() => results.value.length > 0);
       @input="onInput"
       @keydown="onKeydown"
       class="w-full rounded border px-3 py-2 outline-none focus:ring"
+      role="combobox"
+      :aria-expanded="open"
+      aria-autocomplete="list"
+      :aria-controls="listId"
+      :aria-activedescendant="highlightedId"
     />
     <ul
       v-if="open && has"
       class="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded border bg-[var(--bg)] shadow"
       role="listbox"
+      :id="listId"
     >
       <li
         v-for="(c, i) in results"
+        :id="`opt-${i}`"
         :key="c.id"
         :class="['px-3 py-2 cursor-pointer hover:bg-black/5', i===highlighted && 'bg-black/10']"
         @mouseenter="highlighted = i"
         @mousedown.prevent="pick(c)"
         role="option"
+        :aria-selected="i===highlighted"
       >
         <span class="font-medium">{{ c.name }}</span>
         <span class="opacity-70">, {{ c.country }}</span>
