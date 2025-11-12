@@ -44,20 +44,20 @@ P1
 # SECTION C — API INTEGRATIONS
 # =========================
 P1
-[ ] C.01 Weather API (Open-Meteo / OpenWeather)
-    [ ] C.01.a weather.service.ts (normalize to WeatherSummary)
-    [ ] C.01.b Handle daily + hourly data
-[ ] C.02 Air Quality API (OpenAQ)
-    [ ] C.02.a air.service.ts (normalize to AirQuality model)
-    [ ] C.02.b Compute AQI category (Good / Moderate / Unhealthy / etc.)
-[ ] C.03 City Info API (Teleport Urban Areas)
-    [ ] C.03.a teleport.service.ts (fetch scores, cost of living)
-    [ ] C.03.b Handle missing data gracefully
-[ ] C.04 Proxy backend (optional)
-    [ ] C.04.a Setup Hono (Cloudflare Workers) or Fastify
-    [ ] C.04.b Routes: /api/weather /api/air /api/city /api/teleport
-    [ ] C.04.c Add rate-limit + sanitization
-[ ] C.05 Type validation with zod for all responses
+[x] C.01 Weather API (Open-Meteo / OpenWeather)
+    [x] C.01.a weather.service.ts (normalize to WeatherSummary)
+    [x] C.01.b Handle daily + hourly data
+[x] C.02 Air Quality API (OpenAQ)
+    [x] C.02.a air.service.ts (normalize to AirQuality model)
+    [x] C.02.b Compute AQI category (Good / Moderate / Unhealthy / etc.)
+[x] C.03 City Info API (Teleport Urban Areas)
+    [x] C.03.a teleport.service.ts (fetch scores, cost of living)
+    [x] C.03.b Handle missing data gracefully
+[x] C.04 Proxy backend (optional)
+    [x] C.04.a Setup Hono (Cloudflare Workers) or Fastify
+    [x] C.04.b Routes: /api/weather /api/air /api/city /api/teleport
+    [x] C.04.c Add rate-limit + sanitization
+[x] C.05 Type validation with zod for all responses
 
 # =========================
 # SECTION D — UI & UX ENHANCEMENTS

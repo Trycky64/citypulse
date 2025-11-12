@@ -38,10 +38,22 @@ app.get("/api/city/search", async (c) => {
   url.searchParams.set("q", q);
   url.searchParams.set("limit", "8");
   url.searchParams.set("addressdetails", "1");
+
   const res = await fetch(url, {
     headers: { "Accept-Language": "en,fr", "User-Agent": "CityPulse/1.0" },
   } as RequestInit);
-  return c.body(await res.text(), 200, { "content-type": "application/json" });
+  const raw = await res.json();
+
+  // Normalisation
+  const out = raw.map((it: any, i: number) => {
+    const name = it.address?.city || it.address?.town || it.address?.village || (it.display_name?.split(",")[0] ?? "").trim();
+    const country = it.address?.country ?? "";
+    const lat = Number(it.lat);
+    const lon = Number(it.lon);
+    return { id: `${i}-${lat.toFixed(4)}-${lon.toFixed(4)}`, name, country, lat, lon };
+  });
+
+  return c.json(out);
 });
 
 // /api/weather → Open-Meteo
@@ -70,6 +82,106 @@ app.get("/api/air", async (c) => {
   url.searchParams.set("timezone", "auto");
   const res = await fetch(url);
   return c.body(await res.text(), 200, { "content-type": "application/json" });
+});
+
+// Teleport proxy
+const UAIndexSchema = z.object({
+  _links: z.object({
+    "ua:item": z.array(z.object({ name: z.string(), href: z.string().url() })),
+  }),
+});
+const ScoresSchema = z.object({
+  teleport_city_score: z.number(),
+  categories: z.array(z.object({ name: z.string(), score_out_of_10: z.number() })),
+  summary: z.string().optional(),
+});
+const DetailsSchema = z.object({
+  categories: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    data: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      currency_dollar_value: z.number().nullable().optional(),
+      float_value: z.number().nullable().optional(),
+      string_value: z.string().nullable().optional(),
+    })),
+  })),
+});
+
+function toSlugCandidate(name: string) {
+  return name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
+async function resolveSlug(cityName: string): Promise<string | null> {
+  try {
+    const res = await fetch("https://api.teleport.org/api/urban_areas/");
+    const data = await res.json();
+    const idx = UAIndexSchema.parse(data);
+    const target = cityName.toLowerCase();
+    const hit = idx._links["ua:item"].find(x => x.name.toLowerCase() === target)
+      ?? idx._links["ua:item"].find(x => x.name.toLowerCase().includes(target));
+    if (!hit) return null;
+    const m = hit.href.match(/slug:([^/]+)\//);
+    return m?.[1] ?? null;
+  } catch {
+    const s = toSlugCandidate(cityName);
+    return s || null;
+  }
+}
+
+app.get("/api/teleport", async (c) => {
+  const name = new URL(c.req.url).searchParams.get("city") ?? "";
+  if (!name || name.length < 2) return c.json({ slug: null, scores: null, cost: null });
+
+  const slug = await resolveSlug(name);
+  if (!slug) return c.json({ slug: null, scores: null, cost: null });
+
+  const [scoresRes, detailsRes] = await Promise.allSettled([
+    fetch(`https://api.teleport.org/api/urban_areas/slug:${slug}/scores/`),
+    fetch(`https://api.teleport.org/api/urban_areas/slug:${slug}/details/`),
+  ]);
+
+  let scores: any = null;
+  if (scoresRes.status === "fulfilled") {
+    try {
+      const raw = await scoresRes.value.json();
+      const p = ScoresSchema.parse(raw);
+      scores = {
+        cityScore: Math.round(p.teleport_city_score * 10) / 10,
+        categories: p.categories.map(c => ({ name: c.name, score: Math.round(c.score_out_of_10 * 10) / 10 })),
+        summary: p.summary,
+      };
+    } catch {
+      scores = null;
+    }
+  }
+
+  let cost: any = null;
+  if (detailsRes.status === "fulfilled") {
+    try {
+      const raw = await detailsRes.value.json();
+      const p = DetailsSchema.parse(raw);
+      const col = p.categories.find(c => c.id === "COST-OF-LIVING");
+      cost = {
+        currency: "USD",
+        items: (col?.data ?? []).map(d => ({
+          label: d.label,
+          value: d.currency_dollar_value ?? d.float_value ?? null,
+          unit: d.string_value ?? undefined,
+        })),
+      };
+    } catch {
+      cost = null;
+    }
+  }
+
+  return c.json({ slug, scores, cost });
 });
 
 // Root sanity route

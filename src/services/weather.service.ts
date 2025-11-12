@@ -1,11 +1,17 @@
 import { z } from "zod";
 import type { WeatherSummary } from "@/types/weather";
-import axios from "axios";
+import { http } from "./http";
 
-const OpenMeteoSchema = z.object({
+// https://open-meteo.com/en/docs
+const Schema = z.object({
   current: z.object({
     temperature_2m: z.number(),
-    apparent_temperature: z.number().optional(),
+    apparent_temperature: z.number().nullable().optional(),
+  }),
+  hourly: z.object({
+    time: z.array(z.string()),
+    temperature_2m: z.array(z.number()),
+    precipitation: z.array(z.number()),
   }),
   daily: z.object({
     time: z.array(z.string()),
@@ -16,25 +22,43 @@ const OpenMeteoSchema = z.object({
 });
 
 export async function getWeather(lat: number, lon: number): Promise<WeatherSummary> {
-  const url = "https://api.open-meteo.com/v1/forecast";
-  const { data } = await axios.get(url, {
-    params: {
-      latitude: lat,
-      longitude: lon,
-      current: "temperature_2m,apparent_temperature",
-      daily: "temperature_2m_max,temperature_2m_min,precipitation_sum",
-      timezone: "auto",
-    },
-  });
-  const parsed = OpenMeteoSchema.parse(data);
-  const daily = parsed.daily.time.map((date, i) => ({
-    date,
-    tMin: parsed.daily.temperature_2m_min[i],
-    tMax: parsed.daily.temperature_2m_max[i],
-    precipMm: parsed.daily.precipitation_sum[i],
-  }));
+  const { data } = await http.get("/api/weather", { params: { lat, lon } });
+
+  const p = Schema.parse(data);
+
+  const nDaily = Math.min(
+    p.daily.time.length,
+    p.daily.temperature_2m_min.length,
+    p.daily.temperature_2m_max.length,
+    p.daily.precipitation_sum.length
+  );
+  const daily = [] as { date: string; tMin: number; tMax: number; precipMm: number }[];
+  for (let i = 0; i < nDaily; i++) {
+    daily.push({
+      date: p.daily.time[i]!,
+      tMin: p.daily.temperature_2m_min[i]!,
+      tMax: p.daily.temperature_2m_max[i]!,
+      precipMm: p.daily.precipitation_sum[i]!,
+    });
+  }
+
+  // On prend jusqu’à 24 échantillons horaires récents (ou à venir)
+  const H = p.hourly;
+  const nHourly = Math.min(H.time.length, H.temperature_2m.length, H.precipitation.length);
+  const take = Math.min(24, nHourly);
+  const start = Math.max(0, nHourly - take);
+  const hourly = [] as { time: string; temp: number; precipMm: number }[];
+  for (let k = 0; k < take; k++) {
+    const i = start + k;
+    hourly.push({ time: H.time[i]!, temp: H.temperature_2m[i]!, precipMm: H.precipitation[i]! });
+  }
+
   return {
-    now: { temp: parsed.current.temperature_2m, feels: parsed.current.apparent_temperature ?? parsed.current.temperature_2m },
+    now: {
+      temp: p.current.temperature_2m,
+      feels: p.current.apparent_temperature ?? p.current.temperature_2m,
+    },
     daily,
+    hourly,
   };
 }

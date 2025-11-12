@@ -36,13 +36,18 @@ function onKeydown(e: KeyboardEvent) {
     open.value = true;
   }
   if (e.key === "ArrowDown") {
-    highlighted.value = (highlighted.value + 1) % results.value.length;
-    e.preventDefault();
+    if (results.value.length > 0) {
+      highlighted.value = (highlighted.value + 1) % results.value.length;
+      e.preventDefault();
+    }
   } else if (e.key === "ArrowUp") {
-    highlighted.value = (highlighted.value - 1 + results.value.length) % results.value.length;
-    e.preventDefault();
+    if (results.value.length > 0) {
+      highlighted.value = (highlighted.value - 1 + results.value.length) % results.value.length;
+      e.preventDefault();
+    }
   } else if (e.key === "Enter" && highlighted.value >= 0) {
-    pick(results.value[highlighted.value]);
+    const sel = results.value[highlighted.value];
+    if (sel) pick(sel);
   } else if (e.key === "Escape") {
     open.value = false;
   }

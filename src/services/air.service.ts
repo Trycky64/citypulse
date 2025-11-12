@@ -1,22 +1,16 @@
 import { z } from "zod";
 import type { AirQuality } from "@/types/air";
-import axios from "axios";
+import { http } from "./http";
 
-/**
- * On utilise l'API Air Quality d'Open-Meteo (CORS OK, pas de clé).
- * https://open-meteo.com/en/docs/air-quality-api
- *
- * Paramètres utiles : pm2_5, pm10, nitrogen_dioxide, ozone (hourly)
- */
-
-const OpenMeteoAqSchema = z.object({
+// https://open-meteo.com/en/docs/air-quality-api
+const Schema = z.object({
   hourly: z.object({
     time: z.array(z.string()),
     pm2_5: z.array(z.number()).nullable().optional(),
     pm10: z.array(z.number()).nullable().optional(),
     nitrogen_dioxide: z.array(z.number()).nullable().optional(),
     ozone: z.array(z.number()).nullable().optional(),
-  })
+  }),
 });
 
 function categoryFromPM25(pm25?: number): AirQuality["category"] {
@@ -29,38 +23,29 @@ function categoryFromPM25(pm25?: number): AirQuality["category"] {
 }
 
 export async function getAirQuality(lat: number, lon: number): Promise<AirQuality> {
-  const url = "https://air-quality-api.open-meteo.com/v1/air-quality";
-  const { data } = await axios.get(url, {
-    params: {
-      latitude: lat,
-      longitude: lon,
-      hourly: "pm2_5,pm10,nitrogen_dioxide,ozone",
-      timezone: "auto"
-    },
-  });
+  const { data } = await http.get("/api/air", { params: { lat, lon } });
 
-  const parsed = OpenMeteoAqSchema.parse(data);
-  const H = parsed.hourly;
-  const len = H.time.length;
+  const p = Schema.parse(data);
+  const H = p.hourly;
+  const n = H.time.length;
+  const take = Math.min(24, n);
+  const start = Math.max(0, n - take);
 
-  // On prend ~24 derniers points (si disponibles)
-  const take = Math.min(24, len);
-  const start = Math.max(0, len - take);
-
-  const samples = Array.from({ length: take }, (_, k) => {
+  const samples = [] as { time: string; pm25?: number; pm10?: number; no2?: number; o3?: number }[];
+  for (let k = 0; k < take; k++) {
     const i = start + k;
-    return {
-      time: H.time[i],
+    samples.push({
+      time: H.time[i]!,
       pm25: H.pm2_5?.[i] ?? undefined,
       pm10: H.pm10?.[i] ?? undefined,
-      no2:  H.nitrogen_dioxide?.[i] ?? undefined,
-      o3:   H.ozone?.[i] ?? undefined,
-    };
-  });
+      no2: H.nitrogen_dioxide?.[i] ?? undefined,
+      o3: H.ozone?.[i] ?? undefined,
+    });
+  }
 
-  const lastPM25 = samples.slice().reverse().find(s => s.pm25 != null)?.pm25;
+  const lastPM25 = [...samples].reverse().find(s => s.pm25 != null)?.pm25;
   const category = categoryFromPM25(lastPM25);
-  const aqiApprox = lastPM25 == null ? 60 : Math.round(Math.min(500, lastPM25 * 4)); // approx visuelle
+  const aqiApprox = lastPM25 == null ? 60 : Math.round(Math.min(500, lastPM25 * 4));
 
   return { aqi: aqiApprox, category, samples };
 }
