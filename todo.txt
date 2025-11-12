@@ -21,24 +21,24 @@ P1
 # SECTION B — CORE SYSTEM (MVP)
 # =========================
 P1
-[ ] B.01 Implement City Search (auto-complete input)
-    [ ] B.01.a Service: geo.service.ts (GeoDB / Nominatim)
-    [ ] B.01.b Debounce requests + keyboard navigation
-    [ ] B.01.c Display city list dropdown + click/select action
-[ ] B.02 Create City page ("/city/:id")
-    [ ] B.02.a Weather card (temp, feels, condition)
-    [ ] B.02.b Air quality card (AQI + category)
-    [ ] B.02.c Map (Leaflet centered on city)
-[ ] B.03 Implement Compare page ("/compare")
-    [ ] B.03.a Search + add 2 cities
-    [ ] B.03.b Display side-by-side comparison (Weather + Air)
-[ ] B.04 Error handling system
-    [ ] B.04.a Axios interceptor + retry (exponential backoff)
-    [ ] B.04.b Display toast notifications for errors
-[ ] B.05 Global loading + skeleton components
-[ ] B.06 Responsive layout (mobile-first)
-[ ] B.07 Unit tests (Vitest) for geo.service + weather.service + air.service
-[ ] B.08 E2E test basic flow (Playwright): search → select city → display results
+[x] B.01 Implement City Search (auto-complete input)
+    [x] B.01.a Service: geo.service.ts (GeoDB / Nominatim)
+    [x] B.01.b Debounce requests + keyboard navigation
+    [x] B.01.c Display city list dropdown + click/select action
+[x] B.02 Create City page ("/city/:id")
+    [x] B.02.a Weather card (temp, feels, condition)
+    [x] B.02.b Air quality card (AQI + category)
+    [x] B.02.c Map (Leaflet centered on city)
+[x] B.03 Implement Compare page ("/compare")
+    [x] B.03.a Search + add 2 cities
+    [x] B.03.b Display side-by-side comparison (Weather + Air)
+[x] B.04 Error handling system
+    [x] B.04.a Axios interceptor + retry (exponential backoff)
+    [x] B.04.b Display toast notifications for errors
+[x] B.05 Global loading + skeleton components
+[x] B.06 Responsive layout (mobile-first)
+[x] B.07 Unit tests (Vitest) for geo.service + weather.service + air.service
+[x] B.08 E2E test basic flow (Playwright): search → select city → display results
 
 # =========================
 # SECTION C — API INTEGRATIONS
