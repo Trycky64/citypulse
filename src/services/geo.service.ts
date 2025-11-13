@@ -10,10 +10,39 @@ const CitySchema = z.object({
   lon: z.number(),
 });
 
-// On reçoit déjà des objets normalisés par le proxy : [{id,name,country,lat,lon}]
 export async function searchCities(q: string, limit = 8): Promise<City[]> {
   if (!q.trim()) return [];
-  const { data } = await http.get("/api/city/search", { params: { q, limit } });
-  const arr = z.array(CitySchema).parse(data);
-  return arr;
+
+  try {
+    const { data } = await http.get("/api/city/search", { params: { q, limit } });
+
+    let raw: unknown = data;
+
+    // 🔧 Si c'est une string, on ne parse QUE si ça ressemble à du JSON
+    if (typeof raw === "string") {
+      const s = raw.trim();
+      if (s.startsWith("[") || s.startsWith("{")) {
+        try {
+          raw = JSON.parse(s);
+        } catch (e) {
+          console.error("[CityPulse] /api/city/search: JSON.parse failed", e, s);
+          return [];
+        }
+      } else {
+        console.error("[CityPulse] /api/city/search: non-JSON string response", s);
+        return [];
+      }
+    }
+
+    const parsed = z.array(CitySchema).safeParse(raw);
+    if (!parsed.success) {
+      console.error("[CityPulse] /api/city/search: invalid schema", parsed.error, raw);
+      return [];
+    }
+
+    return parsed.data;
+  } catch (err) {
+    console.error("[CityPulse] /api/city/search: request failed", err);
+    return [];
+  }
 }
