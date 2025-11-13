@@ -43,6 +43,10 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+function printReport() {
+  window.print();
+}
 </script>
 
 <template>
@@ -51,9 +55,14 @@ onMounted(async () => {
     <p class="opacity-70 mb-4 text-sm">
       Pays : {{ city.country }} • Lat/Lon : {{ city.lat.toFixed(4) }}, {{ city.lon.toFixed(4) }}
     </p>
-    <button aria-label="Ajouter ou retirer des favoris" class="px-3 py-1 rounded bg-[var(--primary)] text-white mb-4 focus:ring" @click="pinCity">
-      {{ isFav() ? "Retirer des favoris" : "Ajouter aux favoris" }}
-    </button>
+    <div class="flex items-center gap-3 mb-4">
+      <button aria-label="Ajouter ou retirer des favoris" class="px-3 py-1 rounded bg-[var(--primary)] text-white focus:ring" @click="pinCity">
+        {{ isFav() ? "Retirer des favoris" : "Ajouter aux favoris" }}
+      </button>
+      <button type="button" class="px-3 py-1.5 rounded-md text-xs bg-slate-800 hover:bg-slate-700 print:hidden" @click="printReport">
+        Exporter le rapport (PDF)
+      </button>
+    </div>
 
     <div v-if="error" class="card border border-red-400 text-red-600">Erreur : {{ error }}</div>
 
@@ -116,3 +125,27 @@ onMounted(async () => {
 <script lang="ts">
 // pin favorites helpers separated from setup for clarity
 </script>
+
+<style scoped>
+/* Styles dédiés à l’impression */
+@media print {
+  .city-report {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .city-report header {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .city-report h1 {
+    font-size: 20px;
+  }
+
+  .city-report section {
+    page-break-inside: avoid;
+  }
+}
+</style>
