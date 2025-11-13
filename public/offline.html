@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CityPulse — Hors ligne</title>
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background: #0b1020;
+        color: white;
+        margin: 0;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        height: 100vh; text-align: center;
+      }
+      h1 { font-size: 2em; margin-bottom: 0.5em; }
+      p { opacity: 0.8; margin-bottom: 2em; }
+      button {
+        background: #2563eb; color: white; border: none;
+        border-radius: 6px; padding: 0.8em 1.4em; cursor: pointer; font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mode hors ligne</h1>
+    <p>Vous êtes actuellement sans connexion.<br />Certaines données peuvent ne pas être disponibles.</p>
+    <button onclick="window.location.reload()">Réessayer</button>
+  </body>
+</html>
