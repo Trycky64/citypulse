@@ -5,7 +5,6 @@
         <!-- Brand -->
         <RouterLink to="/" class="flex items-center gap-2">
           <img src="@/assets/logo.svg" alt="CityPulse" class="h-6 w-auto" />
-          <span class="font-semibold text-gray-900 dark:text-white">CityPulse</span>
         </RouterLink>
         <!-- Desktop nav -->
         <nav class="hidden md:flex items-center gap-4 text-sm">
