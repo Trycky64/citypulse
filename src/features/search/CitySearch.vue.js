@@ -137,9 +137,6 @@ if (__VLS_ctx.open && __VLS_ctx.has) {
             ...{ class: "font-medium" },
         });
         (c.name);
-        __VLS_asFunctionalElement(__VLS_intrinsics.span, __VLS_intrinsics.span)({
-            ...{ class: "opacity-70" },
-        });
         (c.country);
     }
 }
@@ -167,7 +164,6 @@ if (__VLS_ctx.open && __VLS_ctx.has) {
 /** @type {__VLS_StyleScopedClasses['cursor-pointer']} */ ;
 /** @type {__VLS_StyleScopedClasses['hover:bg-black/5']} */ ;
 /** @type {__VLS_StyleScopedClasses['font-medium']} */ ;
-/** @type {__VLS_StyleScopedClasses['opacity-70']} */ ;
 const __VLS_export = (await import('vue')).defineComponent({
     __typeProps: {},
 });

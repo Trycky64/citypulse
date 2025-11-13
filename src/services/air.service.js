@@ -2,15 +2,15 @@ import { http } from "./http";
 import { cacheSWR } from "./cache";
 function categoryFromPM25(pm25) {
     if (pm25 == null || Number.isNaN(pm25))
-           return "Unknown";
+        return "Unknown";
     if (pm25 <= 12)
-           return "Good";
+        return "Good";
     if (pm25 <= 35)
-           return "Moderate";
+        return "Moderate";
     if (pm25 <= 55)
-           return "Unhealthy for Sensitive Groups";
+        return "Unhealthy for Sensitive Groups";
     if (pm25 <= 150)
-           return "Unhealthy";
+        return "Unhealthy";
     if (pm25 <= 250)
         return "Very Unhealthy";
     return "Hazardous";

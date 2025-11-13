@@ -105,14 +105,23 @@ export async function getWeatherSummary(lat: number, lon: number) {
   // Backwards-compatible helper: query the http endpoint directly and build a
   // compact summary. This keeps older tests simple (they mock http.get) and
   // avoids double-mocking issues.
-  const resp = await http.get("/api/weather", { params: { lat, lon } });
+  // dynamically import http so tests that mock the module are honored
+  const mod = await import("@/services/http");
+  // debug: compare mocked http from test import vs dynamic import
+  // eslint-disable-next-line no-console
+  console.log("[weather.service] dynamic http.get typeof:", typeof mod.http.get, "equal to static http?", (mod as any).http === (http as any));
+  const resp = await mod.http.get("/api/weather", { params: { lat, lon } });
   const d = (resp as any)?.data ?? {};
+  // eslint-disable-next-line no-console
+  console.log('[weather.service] raw d.daily =>', d.daily);
 
   const currentTemp = Number(d.current?.temperature_2m ?? d.current?.temp ?? 0);
   const feels = d.current?.apparent_temperature ?? d.current?.feels ?? currentTemp;
 
-  const dailyMax = Array.isArray(d.daily?.temperature_2m_max) ? d.daily.temperature_2m_max[0] : NaN;
-  const dailyMin = Array.isArray(d.daily?.temperature_2m_min) ? d.daily.temperature_2m_min[0] : NaN;
+  const rawMax = d.daily?.temperature_2m_max ?? d.daily?.temperature_2m?.max ?? d.daily?.max;
+  const rawMin = d.daily?.temperature_2m_min ?? d.daily?.temperature_2m?.min ?? d.daily?.min;
+  const dailyMax = Array.isArray(rawMax) ? rawMax[0] : Number(rawMax ?? NaN);
+  const dailyMin = Array.isArray(rawMin) ? rawMin[0] : Number(rawMin ?? NaN);
 
   const hourly = Array.isArray(d.hourly?.time) && Array.isArray(d.hourly?.temperature_2m)
     ? d.hourly.time.map((t: string, i: number) => ({ time: t, temperature: d.hourly.temperature_2m[i], precipMm: d.hourly.precipitation?.[i] ?? 0 }))

@@ -121,8 +121,9 @@ async function loadLeftData() {
   loadingLeft.value = true;
   leftError.value = null;
   try {
-    const { lat, lon } = leftCity.value;
-    leftWeather.value = await getWeatherSummary(lat, lon);
+  const { lat, lon } = leftCity.value;
+  // use the full WeatherSummary shape
+  leftWeather.value = await getWeather(lat, lon);
     leftAir.value = await getAirQuality(lat, lon);
   } catch (e) {
     console.error("[CityPulse] loadLeftData error", e);
@@ -137,8 +138,9 @@ async function loadRightData() {
   loadingRight.value = true;
   rightError.value = null;
   try {
-    const { lat, lon } = rightCity.value;
-    rightWeather.value = await getWeatherSummary(lat, lon);
+  const { lat, lon } = rightCity.value;
+  // use the full WeatherSummary shape
+  rightWeather.value = await getWeather(lat, lon);
     rightAir.value = await getAirQuality(lat, lon);
   } catch (e) {
     console.error("[CityPulse] loadRightData error", e);
@@ -193,6 +195,31 @@ async function copyLink() {
 }
 
 const showQr = ref(false);
+
+// Daily min/max helpers (getWeather returns daily as array of { tMin, tMax })
+const leftDailyMin = computed(() => {
+  if (!leftWeather.value) return NaN;
+  const arr = leftWeather.value.daily.map((d) => d.tMin);
+  return arr.length ? Math.min(...arr) : NaN;
+});
+
+const leftDailyMax = computed(() => {
+  if (!leftWeather.value) return NaN;
+  const arr = leftWeather.value.daily.map((d) => d.tMax);
+  return arr.length ? Math.max(...arr) : NaN;
+});
+
+const rightDailyMin = computed(() => {
+  if (!rightWeather.value) return NaN;
+  const arr = rightWeather.value.daily.map((d) => d.tMin);
+  return arr.length ? Math.min(...arr) : NaN;
+});
+
+const rightDailyMax = computed(() => {
+  if (!rightWeather.value) return NaN;
+  const arr = rightWeather.value.daily.map((d) => d.tMax);
+  return arr.length ? Math.max(...arr) : NaN;
+});
 </script>
 
 <template>
@@ -289,7 +316,7 @@ const showQr = ref(false);
                 {{ leftWeather.now.temp }}°C, ressenti {{ leftWeather.now.feels }}°
               </div>
               <div class="text-[11px] opacity-60">
-                Min {{ leftWeather.daily.min }}°C · Max {{ leftWeather.daily.max }}°C
+                Min {{ leftDailyMin }}°C · Max {{ leftDailyMax }}°C
               </div>
             </div>
 
@@ -327,7 +354,7 @@ const showQr = ref(false);
                 {{ rightWeather.now.temp }}°C, ressenti {{ rightWeather.now.feels }}°
               </div>
               <div class="text-[11px] opacity-60">
-                Min {{ rightWeather.daily.min }}°C · Max {{ rightWeather.daily.max }}°C
+                Min {{ rightDailyMin }}°C · Max {{ rightDailyMax }}°C
               </div>
             </div>
 

@@ -44,6 +44,9 @@ const __VLS_export = await (async () => {
             loading.value = false;
         }
     });
+    function printReport() {
+        window.print();
+    }
     debugger; /* PartiallyEnd: #3632/scriptSetup.vue */
     const __VLS_ctx = {
         ...{},
@@ -51,6 +54,9 @@ const __VLS_export = await (async () => {
     };
     let __VLS_components;
     let __VLS_directives;
+    /** @type {__VLS_StyleScopedClasses['city-report']} */ ;
+    /** @type {__VLS_StyleScopedClasses['city-report']} */ ;
+    /** @type {__VLS_StyleScopedClasses['city-report']} */ ;
     __VLS_asFunctionalElement(__VLS_intrinsics.main, __VLS_intrinsics.main)({
         ...{ class: "cp-container py-8" },
     });
@@ -69,16 +75,26 @@ const __VLS_export = await (async () => {
     (__VLS_ctx.city.lon.toFixed(4));
     // @ts-ignore
     [city, city, city,];
+    __VLS_asFunctionalElement(__VLS_intrinsics.div, __VLS_intrinsics.div)({
+        ...{ class: "flex items-center gap-3 mb-4" },
+    });
     __VLS_asFunctionalElement(__VLS_intrinsics.button, __VLS_intrinsics.button)({
         ...{ onClick: (__VLS_ctx.pinCity) },
         'aria-label': "Ajouter ou retirer des favoris",
-        ...{ class: "px-3 py-1 rounded bg-[var(--primary)] text-white mb-4 focus:ring" },
+        ...{ class: "px-3 py-1 rounded bg-[var(--primary)] text-white focus:ring" },
     });
     // @ts-ignore
     [pinCity,];
     (__VLS_ctx.isFav() ? "Retirer des favoris" : "Ajouter aux favoris");
     // @ts-ignore
     [isFav,];
+    __VLS_asFunctionalElement(__VLS_intrinsics.button, __VLS_intrinsics.button)({
+        ...{ onClick: (__VLS_ctx.printReport) },
+        type: "button",
+        ...{ class: "px-3 py-1.5 rounded-md text-xs bg-slate-800 hover:bg-slate-700 print:hidden" },
+    });
+    // @ts-ignore
+    [printReport,];
     if (__VLS_ctx.error) {
         // @ts-ignore
         [error,];
@@ -249,13 +265,23 @@ const __VLS_export = await (async () => {
     /** @type {__VLS_StyleScopedClasses['opacity-70']} */ ;
     /** @type {__VLS_StyleScopedClasses['mb-4']} */ ;
     /** @type {__VLS_StyleScopedClasses['text-sm']} */ ;
+    /** @type {__VLS_StyleScopedClasses['flex']} */ ;
+    /** @type {__VLS_StyleScopedClasses['items-center']} */ ;
+    /** @type {__VLS_StyleScopedClasses['gap-3']} */ ;
+    /** @type {__VLS_StyleScopedClasses['mb-4']} */ ;
     /** @type {__VLS_StyleScopedClasses['px-3']} */ ;
     /** @type {__VLS_StyleScopedClasses['py-1']} */ ;
     /** @type {__VLS_StyleScopedClasses['rounded']} */ ;
     /** @type {__VLS_StyleScopedClasses['bg-[var(--primary)]']} */ ;
     /** @type {__VLS_StyleScopedClasses['text-white']} */ ;
-    /** @type {__VLS_StyleScopedClasses['mb-4']} */ ;
     /** @type {__VLS_StyleScopedClasses['focus:ring']} */ ;
+    /** @type {__VLS_StyleScopedClasses['px-3']} */ ;
+    /** @type {__VLS_StyleScopedClasses['py-1.5']} */ ;
+    /** @type {__VLS_StyleScopedClasses['rounded-md']} */ ;
+    /** @type {__VLS_StyleScopedClasses['text-xs']} */ ;
+    /** @type {__VLS_StyleScopedClasses['bg-slate-800']} */ ;
+    /** @type {__VLS_StyleScopedClasses['hover:bg-slate-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['print:hidden']} */ ;
     /** @type {__VLS_StyleScopedClasses['card']} */ ;
     /** @type {__VLS_StyleScopedClasses['border']} */ ;
     /** @type {__VLS_StyleScopedClasses['border-red-400']} */ ;

@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { setupMocks } from "./_mocks";
+import { ensureServer } from "./_helpers";
 
 test("full city flow: search -> city page -> export", async ({ page }) => {
   await page.goto("/");
 
   // barre de recherche principale
   const input = page.getByPlaceholder("Rechercher une ville"); // adapte au texte exact
+  await ensureServer(page, '/');
+  await setupMocks(page);
   await input.fill("Paris");
   await page.waitForTimeout(500); // debounce + API
 

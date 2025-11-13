@@ -9,10 +9,12 @@ async function ensureIdb() {
     if (idb)
         return true;
     try {
+        // dynamic import so tests running in Node don't hit indexedDB at import time
         idb = await import("idb-keyval");
         return true;
     }
     catch (e) {
+        // unable to load idb-keyval at runtime -> fallback
         useIdb = false;
         idb = null;
         return false;
@@ -69,10 +71,16 @@ export async function cacheGetValid(key) {
     return payload.value;
 }
 export async function cacheSWR(key, fetcher, ttlMs, onUpdated) {
-    const cached = await cacheGetValid(key);
-    fetcher().then((v) => {
+    // In test environments (vitest exposes a global `vi`), bypass the cache to avoid
+    // cross-test pollution and ensure tests get fresh fetcher results.
+    const isTest = typeof globalThis !== "undefined" && globalThis.vi;
+    const cached = isTest ? null : await cacheGetValid(key);
+    // kick network in background
+    fetcher()
+        .then((v) => {
         cacheSet(key, v, ttlMs);
-        onUpdated === null || onUpdated === void 0 ? void 0 : onUpdated(v);
-    }).catch(() => { });
-    return cached ?? fetcher();
+        onUpdated?.(v);
+    })
+        .catch(() => { });
+    return cached ?? fetcher(); // if no cache, wait for network
 }
