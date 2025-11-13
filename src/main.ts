@@ -1,20 +1,30 @@
-import "./styles/index.css";
 import { createApp } from "vue";
-import { createPinia } from "pinia";
-import { usePrefs } from "@/stores/prefs";
 import App from "./App.vue";
 import router from "./router";
+import { createPinia } from "pinia";
+import "./styles/index.css";
+import { usePrefs } from "@/stores/prefs";
 
-const pinia = createPinia();
 const app = createApp(App);
 
-// Active le dark mode selon la préférence système
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-const root = document.documentElement;
-if (prefersDark) root.classList.add("dark");
+// Pinia + router
+const pinia = createPinia();
+app.use(pinia);
+app.use(router);
 
-app.use(router).use(pinia);
 app.mount("#app");
 
-// Charger les préférences après le montage (accès localStorage)
-usePrefs().load();
+// Charger les préférences utilisateur
+const prefs = usePrefs();
+if (typeof prefs.load === "function") {
+  prefs.load();
+}
+
+// ✅ Enregistrement du Service Worker uniquement en PROD
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("/sw.js")
+      .catch((err) => console.error("SW registration failed", err));
+  });
+}
