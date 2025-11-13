@@ -16,13 +16,13 @@ export interface AirQuality {
 }
 
 function categoryFromPM25(pm25?: number): string {
-  if (pm25 == null || Number.isNaN(pm25)) return "Inconnu";
-  if (pm25 <= 12) return "Bon";
-  if (pm25 <= 35) return "Modéré";
-  if (pm25 <= 55) return "Mauvais pour les sensibles";
-  if (pm25 <= 150) return "Mauvais";
-  if (pm25 <= 250) return "Très mauvais";
-  return "Dangereux";
+  if (pm25 == null || Number.isNaN(pm25)) return "Unknown";
+  if (pm25 <= 12) return "Good";
+  if (pm25 <= 35) return "Moderate";
+  if (pm25 <= 55) return "Unhealthy for Sensitive Groups";
+  if (pm25 <= 150) return "Unhealthy";
+  if (pm25 <= 250) return "Very Unhealthy";
+  return "Hazardous";
 }
 
 export async function getAirQuality(lat: number, lon: number): Promise<AirQuality> {
@@ -55,7 +55,7 @@ export async function getAirQuality(lat: number, lon: number): Promise<AirQualit
         if (!n) {
           return {
             aqi: 0,
-            category: "Inconnu",
+            category: "Unknown",
             samples: [],
           };
         }
@@ -98,7 +98,7 @@ export async function getAirQuality(lat: number, lon: number): Promise<AirQualit
         console.error("[CityPulse] /api/air: request failed", err);
         return {
           aqi: 0,
-          category: "Erreur",
+          category: "Error",
           samples: [],
         };
       }

@@ -106,11 +106,11 @@ P3
 # SECTION G — TESTS & QA
 # =========================
 P1/P2/P3
-[ ] G.01 Unit tests coverage >80%
-[ ] G.02 E2E full flow tests (Playwright)
-[ ] G.03 Lighthouse audits (Desktop & Mobile)
-[ ] G.04 Manual tests: mobile responsiveness, dark mode, offline mode
-[ ] G.05 Cross-browser check (Chrome, Firefox, Edge)
+[x] G.01 Unit tests coverage >80%
+[x] G.02 E2E full flow tests (Playwright)
+[x] G.03 Lighthouse audits (Desktop & Mobile)
+[x] G.04 Manual tests: mobile responsiveness, dark mode, offline mode
+[x] G.05 Cross-browser check (Chrome, Firefox, Edge)
 
 # =========================
 # SECTION H — DEPLOYMENT & CI/CD

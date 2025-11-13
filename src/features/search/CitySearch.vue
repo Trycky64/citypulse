@@ -106,8 +106,7 @@ const has = computed(() => results.value.length > 0);
         role="option"
         :aria-selected="i===highlighted"
       >
-        <span class="font-medium">{{ c.name }}</span>
-        <span class="opacity-70">, {{ c.country }}</span>
+        <span class="font-medium">{{ c.name }} ({{ c.country }})</span>
       </li>
     </ul>
   </div>

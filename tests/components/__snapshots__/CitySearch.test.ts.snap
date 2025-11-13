@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CitySearch > renders input and shows results 1`] = `
+<div>
+  <div
+    class="cp-citysearch relative"
+  >
+    <input
+      aria-autocomplete="list"
+      aria-controls="citysearch-list"
+      aria-expanded="true"
+      class="w-full rounded border px-3 py-2 outline-none focus:ring"
+      placeholder="Rechercher une ville..."
+      role="combobox"
+    />
+    <ul
+      class="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded border bg-[var(--bg)] shadow"
+      id="citysearch-list"
+      role="listbox"
+    >
+      
+      <li
+        aria-selected="false"
+        class="px-3 py-2 cursor-pointer hover:bg-black/5"
+        id="opt-0"
+        role="option"
+      >
+        <span
+          class="font-medium"
+        >
+          Paris (France)
+        </span>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+`;

@@ -2,18 +2,18 @@ import { http } from "./http";
 import { cacheSWR } from "./cache";
 function categoryFromPM25(pm25) {
     if (pm25 == null || Number.isNaN(pm25))
-        return "Inconnu";
+           return "Unknown";
     if (pm25 <= 12)
-        return "Bon";
+           return "Good";
     if (pm25 <= 35)
-        return "Modéré";
+           return "Moderate";
     if (pm25 <= 55)
-        return "Mauvais pour les sensibles";
+           return "Unhealthy for Sensitive Groups";
     if (pm25 <= 150)
-        return "Mauvais";
+           return "Unhealthy";
     if (pm25 <= 250)
-        return "Très mauvais";
-    return "Dangereux";
+        return "Very Unhealthy";
+    return "Hazardous";
 }
 export async function getAirQuality(lat, lon) {
     const key = `air:${lat.toFixed(3)},${lon.toFixed(3)}`;
@@ -39,7 +39,7 @@ export async function getAirQuality(lat, lon) {
             if (!n) {
                 return {
                     aqi: 0,
-                    category: "Inconnu",
+                    category: "Unknown",
                     samples: [],
                 };
             }
@@ -75,7 +75,7 @@ export async function getAirQuality(lat, lon) {
             console.error("[CityPulse] /api/air: request failed", err);
             return {
                 aqi: 0,
-                category: "Erreur",
+                category: "Error",
                 samples: [],
             };
         }
