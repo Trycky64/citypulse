@@ -98,9 +98,9 @@ P3
 # SECTION F — EXPORT & SHARING
 # =========================
 P3
-[ ] F.01 Shareable compare URLs (query params → 2 cities)
-[ ] F.02 Export city report (PDF / print)
-[ ] F.03 Copy link / QR code generation (optional)
+[x] F.01 Shareable compare URLs (query params → 2 cities)
+[x] F.02 Export city report (PDF / print)
+[x] F.03 Copy link / QR code generation (optional)
 
 # =========================
 # SECTION G — TESTS & QA
