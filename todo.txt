@@ -116,25 +116,25 @@ P1/P2/P3
 # SECTION H — DEPLOYMENT & CI/CD
 # =========================
 P3
-[ ] H.01 GitHub Actions
-    [ ] H.01.a Lint & test on push
-    [ ] H.01.b Build + deploy job
-[ ] H.02 Deployment (Cloudflare Pages / Netlify)
-[ ] H.03 Optional: backend proxy on Cloudflare Workers
-[ ] H.04 Add Sentry (error logging)
-[ ] H.05 Add analytics (Plausible / Fathom)
-[ ] H.06 Version bump + changelog
+[x] H.01 GitHub Actions
+    [x] H.01.a Lint & test on push
+    [x] H.01.b Build + deploy job
+[x] H.02 Deployment (Cloudflare Pages / Netlify)
+[x] H.03 Optional: backend proxy on Cloudflare Workers
+[x] H.04 Add Sentry (error logging)
+[x] H.05 Add analytics (Plausible / Fathom)
+[x] H.06 Version bump + changelog
 
 # =========================
 # SECTION I — DOCUMENTATION & ASSETS
 # =========================
 P1 → P3
-[ ] I.01 README.md complet (intro, stack, setup, APIs, captures)
-[ ] I.02 docs/ folder (technical-structure.md, api-sources.md, ui-design.md)
-[ ] I.03 Screenshots (desktop + mobile)
-[ ] I.04 Feature table P1/P2/P3 (checked at each milestone)
-[ ] I.05 License (MIT)
-[ ] I.06 CHANGELOG.md auto-generated (git-cliff ou release-please)
+[x] I.01 README.md complet (intro, stack, setup, APIs, captures)
+[x] I.02 docs/ folder (technical-structure.md, api-sources.md, ui-design.md)
+[x] I.03 Screenshots (desktop + mobile)
+[x] I.04 Feature table P1/P2/P3 (checked at each milestone)
+[x] I.05 License (MIT)
+[x] I.06 CHANGELOG.md auto-generated (git-cliff ou release-please)
 
 # =========================
 # SECTION J — DELIVERY MILESTONES
