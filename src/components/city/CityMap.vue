@@ -1,20 +1,63 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from "vue";
-import L from "leaflet";
+import { onMounted, onBeforeUnmount, watch, ref } from "vue";
+import * as L from "leaflet";
 
-const props = defineProps<{ lat: number; lon: number; zoom?: number }>();
-let map: L.Map;
+const props = defineProps<{
+  lat: number;
+  lon: number;
+}>();
+
+const mapEl = ref<HTMLDivElement | null>(null);
+let map: L.Map | null = null;
+let marker: L.Marker | null = null;
 
 onMounted(() => {
-  map = L.map("map", { center: [props.lat, props.lon], zoom: props.zoom ?? 11 });
-  L.tileLayer(import.meta.env.VITE_MAP_TILE_URL || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; OpenStreetMap contributors'
+  if (!mapEl.value) return;
+
+  map = L.map(mapEl.value, {
+    center: [props.lat, props.lon],
+    zoom: 11,
+    zoomControl: true,
+  });
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap",
+    maxZoom: 19,
   }).addTo(map);
-  L.marker([props.lat, props.lon]).addTo(map);
+
+  marker = L.marker([props.lat, props.lon]).addTo(map);
+
+  // Fix classique : forcer le recalcul après montage
+  setTimeout(() => {
+    map?.invalidateSize();
+  }, 0);
 });
-onBeforeUnmount(() => map?.remove());
+
+// Quand on change de ville
+watch(
+  () => [props.lat, props.lon],
+  ([lat, lon]) => {
+    if (!map) return;
+
+    const newCenter: L.LatLngExpression = [lat, lon];
+    map.setView(newCenter, map.getZoom());
+    if (marker) {
+      marker.setLatLng(newCenter);
+    }
+  },
+);
+
+onBeforeUnmount(() => {
+  map?.remove();
+  map = null;
+  marker = null;
+});
 </script>
 
 <template>
-  <div id="map" class="h-80 w-full rounded overflow-hidden"></div>
+  <div class="w-full">
+    <div class="relative w-full h-64 sm:h-80 md:h-96 rounded-lg overflow-hidden border border-white/5">
+      <div ref="mapEl" class="w-full h-full" />
+    </div>
+  </div>
 </template>
