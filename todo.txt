@@ -139,7 +139,7 @@ P1 → P3
 # =========================
 # SECTION J — DELIVERY MILESTONES
 # =========================
-[ ] J.01 Phase 1 (MVP) validation — ✅ city search, weather, air, map, compare
-[ ] J.02 Phase 2 (UX & cache) validation — ✅ charts, favorites, teleport, cache
+[x] J.01 Phase 1 (MVP) validation — ✅ city search, weather, air, map, compare
+[x] J.02 Phase 2 (UX & cache) validation — ✅ charts, favorites, teleport, cache
 [ ] J.03 Phase 3 (PWA & polish) validation — ✅ offline, export, deploy
 [ ] J.04 Final delivery package (ZIP + README + screenshots + Lighthouse report)
