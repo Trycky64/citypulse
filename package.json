@@ -13,7 +13,7 @@
     "test": "vitest",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint \"src/**/*.{ts,vue}\" --max-warnings=0",
+  "lint": "eslint \"src/**/*.{ts,vue}\" --config .eslintrc.cjs --max-warnings=0",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "test:e2e": "playwright test"
