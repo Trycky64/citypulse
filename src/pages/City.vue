@@ -60,7 +60,7 @@ function printReport() {
         {{ isFav() ? "Retirer des favoris" : "Ajouter aux favoris" }}
       </button>
       <button type="button"
-        class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-100 dark:bg-slate-700 dark:hover:bg-slate-600 dark:text-slate-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-colors print:hidden"
+        class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-colors print:hidden"
         @click="printReport"
       >
         Exporter le rapport (PDF)
