@@ -8,17 +8,19 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:api": "ts-node apps/api/src/index.ts",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "test": "vitest",
     "test:unit": "vitest",
     "test:coverage": "vitest run --coverage",
-  "lint": "eslint \"src/**/*.{ts,vue}\" --config .eslintrc.cjs --max-warnings=0",
+    "lint": "eslint \"src/**/*.{ts,vue}\" --config .eslintrc.cjs --max-warnings=0",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@hono/node-server": "^1.19.6",
     "@iconify/vue": "^5.0.0",
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",

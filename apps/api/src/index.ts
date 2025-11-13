@@ -1,10 +1,12 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { serve } from "@hono/node-server";
 import { z } from "zod";
 
 const app = new Hono();
 
-// CORS global
+// CORS : en vrai, comme on va être même origine (front + api), on pourrait le désactiver.
+// Je laisse en mode permissif, ça ne gêne pas.
 app.use(
   "*",
   cors({
@@ -13,9 +15,7 @@ app.use(
   }),
 );
 
-// ----------------------
-// SCHEMAS UTILITAIRES
-// ----------------------
+// ----------- SCHEMAS -----------
 const qSchema = z.object({
   q: z.string().min(1),
   limit: z
@@ -29,9 +29,7 @@ const latlonSchema = z.object({
   lon: z.coerce.number().min(-180).max(180),
 });
 
-// ----------------------
-// /api/city/search
-// ----------------------
+// ----------- ROUTE CITY SEARCH -----------
 app.get("/api/city/search", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
   const { q, limit } = qSchema.parse(params);
@@ -45,12 +43,12 @@ app.get("/api/city/search", async (c) => {
   const res = await fetch(url.toString(), {
     headers: {
       "Accept-Language": "en,fr",
-      "User-Agent": "CityPulse/1.0 (citypulse.local)",
+      "User-Agent": "CityPulse/1.0 (citypulse.quentinperriere.com)",
     },
   } as RequestInit);
 
   if (!res.ok) {
-    return c.json([], 200); // on renvoie un array vide mais jamais du HTML / texte
+    return c.json([], 200);
   }
 
   const raw = await res.json();
@@ -78,9 +76,7 @@ app.get("/api/city/search", async (c) => {
   return c.json(out);
 });
 
-// ----------------------
-// /api/weather (Open-Meteo)
-// ----------------------
+// ----------- ROUTE WEATHER -----------
 app.get("/api/weather", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
   const { lat, lon } = latlonSchema.parse(params);
@@ -98,9 +94,7 @@ app.get("/api/weather", async (c) => {
   return c.json(data);
 });
 
-// ----------------------
-// /api/air (Open-Meteo Air Quality)
-// ----------------------
+// ----------- ROUTE AIR QUALITY -----------
 app.get("/api/air", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
   const { lat, lon } = latlonSchema.parse(params);
@@ -116,9 +110,14 @@ app.get("/api/air", async (c) => {
   return c.json(data);
 });
 
-// ----------------------
-// (optionnel) root
-// ----------------------
-app.get("/", (c) => c.text("CityPulse API up"));
+// ----------- PING ROOT -----------
+app.get("/", (c) => c.text("CityPulse API OK"));
 
-export default app;
+// ----------- LANCEMENT NODE -----------
+const port = Number(process.env.PORT) || 8787;
+console.log(`CityPulse API listening on http://127.0.0.1:${port}`);
+
+serve({
+  fetch: app.fetch,
+  port,
+});

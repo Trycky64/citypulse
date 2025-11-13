@@ -91,7 +91,7 @@ const __VLS_export = await (async () => {
     __VLS_asFunctionalElement(__VLS_intrinsics.button, __VLS_intrinsics.button)({
         ...{ onClick: (__VLS_ctx.printReport) },
         type: "button",
-        ...{ class: "px-3 py-1.5 rounded-md text-xs bg-slate-800 hover:bg-slate-700 print:hidden" },
+        ...{ class: "px-3 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-colors print:hidden" },
     });
     // @ts-ignore
     [printReport,];
@@ -279,8 +279,19 @@ const __VLS_export = await (async () => {
     /** @type {__VLS_StyleScopedClasses['py-1.5']} */ ;
     /** @type {__VLS_StyleScopedClasses['rounded-md']} */ ;
     /** @type {__VLS_StyleScopedClasses['text-xs']} */ ;
+    /** @type {__VLS_StyleScopedClasses['font-medium']} */ ;
     /** @type {__VLS_StyleScopedClasses['bg-slate-800']} */ ;
     /** @type {__VLS_StyleScopedClasses['hover:bg-slate-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:bg-slate-700']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:hover:bg-slate-600']} */ ;
+    /** @type {__VLS_StyleScopedClasses['text-white']} */ ;
+    /** @type {__VLS_StyleScopedClasses['focus:outline-none']} */ ;
+    /** @type {__VLS_StyleScopedClasses['focus:ring-2']} */ ;
+    /** @type {__VLS_StyleScopedClasses['focus:ring-cyan-500']} */ ;
+    /** @type {__VLS_StyleScopedClasses['focus:ring-offset-2']} */ ;
+    /** @type {__VLS_StyleScopedClasses['focus:ring-offset-white']} */ ;
+    /** @type {__VLS_StyleScopedClasses['dark:focus:ring-offset-gray-900']} */ ;
+    /** @type {__VLS_StyleScopedClasses['transition-colors']} */ ;
     /** @type {__VLS_StyleScopedClasses['print:hidden']} */ ;
     /** @type {__VLS_StyleScopedClasses['card']} */ ;
     /** @type {__VLS_StyleScopedClasses['border']} */ ;
