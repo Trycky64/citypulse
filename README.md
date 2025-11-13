@@ -1,5 +1,64 @@
 # CityPulse
 
+CityPulse is a small Vue 3 + TypeScript web app that helps compare basic environmental
+information (weather, air quality) between cities. It fetches data from public APIs
+and normalizes results to friendly models for the UI.
+
+Quick links
+- Stack: Vue 3 + Vite + TypeScript + Pinia
+- Tests: Vitest (unit), Playwright (E2E)
+- CI: GitHub Actions (lint / type-check / tests / build)
+
+Getting started (dev)
+
+1. Install dependencies
+
+```powershell
+npm ci
+```
+
+2. Run dev server
+
+```powershell
+npm run dev
+```
+
+3. Run unit tests
+
+```powershell
+npm run test:unit
+```
+
+4. Run E2E tests (Playwright)
+
+Start dev server in one terminal then run in another:
+
+```powershell
+npx playwright test -j 1
+```
+
+Project layout
+- src/: application source
+  - components/: Vue components
+  - features/: higher-level features (CitySearch, etc.)
+  - pages/: route pages (City.vue, Compare.vue)
+  - services/: API wrappers and normalization (weather.service.ts, air.service.ts, geo.service.ts)
+  - stores/: Pinia stores
+
+Conventions & notes
+- API responses are validated with zod where possible. The app includes small
+  fallbacks and caching (IndexedDB via idb-keyval) to make unit testing and
+  offline behaviour more robust.
+- Playwright E2E tests use route-based mocks (tests/e2e/_mocks.ts) to make
+  CI deterministic.
+
+Contributing
+- Please run linters and tests before opening a PR.
+
+License
+- MIT (add LICENSE file in project root if you want a copy bundled)
+# CityPulse
+
 CityPulse est une application **Vue 3 + TypeScript + Vite** qui affiche des **données urbaines en temps réel** (météo, qualité de l’air, etc.) avec **Leaflet** (carte) et **Chart.js** (graphiques).  
 Objectif : fournir un front moderne, performant et accessible, prêt à connecter des APIs publiques.
 
