@@ -86,13 +86,13 @@ P2
 # SECTION E — PWA & OFFLINE
 # =========================
 P3
-[ ] E.01 Add PWA support (manifest.json + icons)
-[ ] E.02 Configure service worker (Workbox)
-    [ ] E.02.a Cache static assets
-    [ ] E.02.b Cache API responses (weather/air)
-[ ] E.03 Add “offline mode” banner
-[ ] E.04 Test installation (desktop + mobile)
-[ ] E.05 Lighthouse target: 90+ Perf / A11y / Best Practices / SEO
+[x] E.01 Add PWA support (manifest.json + icons)
+[x] E.02 Configure service worker (Workbox)
+    [x] E.02.a Cache static assets
+    [x] E.02.b Cache API responses (weather/air)
+[x] E.03 Add “offline mode” banner
+[x] E.04 Test installation (desktop + mobile)
+[x] E.05 Lighthouse target: 90+ Perf / A11y / Best Practices / SEO
 
 # =========================
 # SECTION F — EXPORT & SHARING
