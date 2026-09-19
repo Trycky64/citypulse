@@ -10,7 +10,7 @@ export async function ensureServer(page: Page, path = '/', attempts = 12, delayM
       return;
     } catch (err) {
       // swallow and retry after delay
-      // eslint-disable-next-line no-console
+
       console.log(`[e2e] ensureServer: attempt ${i + 1} failed - ${(err as any)?.message ?? err}`);
       await new Promise((r) => setTimeout(r, delayMs));
     }

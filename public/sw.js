@@ -1,4 +1,4 @@
-const STATIC_CACHE = "citypulse-static-v2";
+const STATIC_CACHE = "citypulse-static-v3";
 const WEATHER_CACHE = "citypulse-weather-v1";
 const AIR_CACHE = "citypulse-air-v1";
 const OSM_CACHE = "citypulse-osm-v1";
@@ -8,6 +8,7 @@ const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/manifest.webmanifest",
+  "/offline.html",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/maskable-512.png"
@@ -53,7 +54,7 @@ self.addEventListener("fetch", (event) => {
         try {
           const res = await fetch(request);
           const cache = await caches.open(WEATHER_CACHE);
-          cache.put(request, res.clone());
+          if (res.ok) cache.put(request, res.clone());
           return res;
         } catch (_err) {
           const cache = await caches.open(WEATHER_CACHE);
@@ -78,7 +79,7 @@ self.addEventListener("fetch", (event) => {
         try {
           const res = await fetch(request);
           const cache = await caches.open(AIR_CACHE);
-          cache.put(request, res.clone());
+          if (res.ok) cache.put(request, res.clone());
           return res;
         } catch (_err) {
           const cache = await caches.open(AIR_CACHE);
@@ -105,7 +106,7 @@ self.addEventListener("fetch", (event) => {
         if (cached) return cached;
         try {
           const res = await fetch(request);
-          cache.put(request, res.clone());
+          if (res.ok) cache.put(request, res.clone());
           return res;
         } catch (_err) {
           return new Response(null, { status: 504 });
@@ -124,10 +125,12 @@ self.addEventListener("fetch", (event) => {
         if (cached) return cached;
         try {
           const res = await fetch(request);
-          cache.put(request, res.clone());
+          if (res.ok) cache.put(request, res.clone());
           return res;
         } catch (_err) {
-          // Pas de fallback agressif ici : si pas en cache, on renvoie juste une 504
+          if (request.mode === "navigate") {
+            return (await cache.match("/")) || (await cache.match("/offline.html"));
+          }
           return new Response(null, { status: 504 });
         }
       })()

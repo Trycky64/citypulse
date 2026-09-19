@@ -3,6 +3,7 @@ import { Line } from "vue-chartjs";
 import {
   Chart as ChartJS, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend
 } from "chart.js";
+import type { ChartOptions } from "chart.js";
 import { useChartColors } from '@/components/charts/useChartColors'
 ChartJS.register(LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
 
@@ -17,17 +18,17 @@ const data = {
     { label: "PM10 (µg/m³)", data: seriesPM10, borderColor: () => palette().accentB, backgroundColor: () => palette().accentFillB, spanGaps: true, tension: .25, pointRadius: 2 },
   ],
 };
-const options = {
+const options: ChartOptions<"line"> = {
   responsive: true,
   maintainAspectRatio: false,
   interaction: { mode: 'nearest', intersect: false },
   plugins: {
-    legend: { labels: { color: () => palette().text } },
+    legend: { labels: { color: palette().text } },
     tooltip: { enabled: true },
   },
   scales: {
     x: { ticks: { color: () => palette().text }, grid: { color: () => palette().grid } },
-    y: { ticks: { color: () => palette().text }, grid: { color: () => palette().grid }, border: { color: () => palette().border } }
+    y: { ticks: { color: () => palette().text }, grid: { color: () => palette().grid }, border: { color: palette().border } }
   }
 };
 </script>

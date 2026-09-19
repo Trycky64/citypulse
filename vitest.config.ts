@@ -14,11 +14,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./tests/setup.ts",
-  // Exclude Playwright e2e tests and node_modules test suites from the unit test run / coverage
-  exclude: ["tests/e2e/**", "node_modules/**"],
+    exclude: ["tests/e2e/**", "node_modules/**"],
     coverage: {
-  // use 'istanbul' provider to avoid v8 provider/tooling mismatches
-  provider: "istanbul",
+      provider: "istanbul",
       reporter: ["text", "html", "lcov"],
       include: ["src/**/*.{ts,vue}"],
       exclude: [

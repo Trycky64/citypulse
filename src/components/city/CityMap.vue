@@ -20,7 +20,10 @@ onMounted(() => {
     zoomControl: true,
   });
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  const tileUrl =
+    import.meta.env.VITE_MAP_TILE_URL || "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+  L.tileLayer(tileUrl, {
     attribution: "© OpenStreetMap",
     maxZoom: 19,
   }).addTo(map);

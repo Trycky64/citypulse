@@ -79,32 +79,32 @@ const has = computed(() => results.value.length > 0);
 <template>
   <div class="cp-citysearch relative">
     <input
-      :placeholder="placeholder ?? 'Rechercher une ville...'"
       v-model="q"
-      @input="onInput"
-      @keydown="onKeydown"
+      :placeholder="placeholder ?? 'Rechercher une ville...'"
       class="w-full rounded border px-3 py-2 outline-none focus:ring"
       role="combobox"
       :aria-expanded="open"
       aria-autocomplete="list"
       :aria-controls="listId"
       :aria-activedescendant="highlightedId"
+      @input="onInput"
+      @keydown="onKeydown"
     />
     <ul
       v-if="open && has"
+      :id="listId"
       class="absolute z-20 mt-1 max-h-80 w-full overflow-auto rounded border bg-[var(--bg)] shadow"
       role="listbox"
-      :id="listId"
     >
       <li
         v-for="(c, i) in results"
         :id="`opt-${i}`"
         :key="c.id"
         :class="['px-3 py-2 cursor-pointer hover:bg-black/5', i===highlighted && 'bg-black/10']"
-        @mouseenter="highlighted = i"
-        @mousedown.prevent="pick(c)"
         role="option"
         :aria-selected="i===highlighted"
+        @mouseenter="highlighted = i"
+        @mousedown.prevent="pick(c)"
       >
         <span class="font-medium">{{ c.name }} ({{ c.country }})</span>
       </li>

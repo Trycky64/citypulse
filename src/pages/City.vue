@@ -7,7 +7,6 @@ import { getAirQuality } from "@/services/air.service";
 import CityMap from "@/components/city/CityMap.vue";
 import TempChart from "@/components/charts/TempChart.vue";
 import AirChart from "@/components/charts/AirChart.vue";
-import TeleportCard from "@/components/city/TeleportCard.vue";
 import { usePrefs } from "@/stores/prefs";
 const prefs = usePrefs();
 function toUnitCtoF(v:number){ return v*9/5+32; }
@@ -59,7 +58,8 @@ function printReport() {
       <button aria-label="Ajouter ou retirer des favoris" class="px-3 py-1 rounded bg-[var(--primary)] text-white focus:ring" @click="pinCity">
         {{ isFav() ? "Retirer des favoris" : "Ajouter aux favoris" }}
       </button>
-      <button type="button"
+      <button
+type="button"
         class="px-3 py-1.5 rounded-md text-xs font-medium bg-slate-800 hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900 transition-colors print:hidden"
         @click="printReport"
       >
@@ -120,7 +120,6 @@ function printReport() {
         />
       </div>
 
-      <TeleportCard class="md:col-span-2" :cityName="city.name" />
     </div>
   </main>
 </template>

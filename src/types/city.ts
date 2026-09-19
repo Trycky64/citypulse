@@ -5,5 +5,4 @@ export interface City {
   lat: number;
   lon: number;
   population?: number;
-  teleportSlug?: string;
 }

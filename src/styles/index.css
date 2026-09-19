@@ -1,7 +1,6 @@
 /* src/styles/index.css */
 
 @import "tailwindcss";
-@import "leaflet/dist/leaflet.css";
 
 /* Thème clair/sombre via variables CSS */
 :root {

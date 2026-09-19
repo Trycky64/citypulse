@@ -11,7 +11,7 @@ async function ensureIdb() {
     // dynamic import so tests running in Node don't hit indexedDB at import time
     idb = await import("idb-keyval");
     return true;
-  } catch (e) {
+  } catch {
     // unable to load idb-keyval at runtime -> fallback
     useIdb = false;
     idb = null;

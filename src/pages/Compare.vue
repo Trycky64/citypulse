@@ -254,7 +254,7 @@ const rightDailyMax = computed(() => {
     <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="card">
         <div class="mb-2 text-sm font-medium">Ville de gauche</div>
-          <CitySearch :onPick="onSelectLeft" />
+          <CitySearch :on-pick="onSelectLeft" />
         <div v-if="leftCity" class="mt-3 text-xs opacity-80">
           {{ leftCity.name }} ({{ leftCity.country }}) ·
           lat {{ leftCity.lat.toFixed(3) }}, lon {{ leftCity.lon.toFixed(3) }}
@@ -263,7 +263,7 @@ const rightDailyMax = computed(() => {
 
       <div class="card">
         <div class="mb-2 text-sm font-medium">Ville de droite</div>
-          <CitySearch :onPick="onSelectRight" />
+          <CitySearch :on-pick="onSelectRight" />
         <div v-if="rightCity" class="mt-3 text-xs opacity-80">
           {{ rightCity.name }} ({{ rightCity.country }}) ·
           lat {{ rightCity.lat.toFixed(3) }}, lon {{ rightCity.lon.toFixed(3) }}

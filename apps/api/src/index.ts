@@ -4,24 +4,20 @@ import { serve } from "@hono/node-server";
 import { z } from "zod";
 
 const app = new Hono();
+const allowedOrigin = process.env.ALLOWED_ORIGIN ?? "http://localhost:5173";
 
-// CORS : en vrai, comme on va être même origine (front + api), on pourrait le désactiver.
-// Je laisse en mode permissif, ça ne gêne pas.
 app.use(
   "*",
   cors({
-    origin: "*",
+    origin: allowedOrigin,
     allowMethods: ["GET"],
   }),
 );
 
 // ----------- SCHEMAS -----------
 const qSchema = z.object({
-  q: z.string().min(1),
-  limit: z
-    .string()
-    .optional()
-    .transform((v) => (v ? Number(v) : 8)),
+  q: z.string().trim().min(1).max(100),
+  limit: z.coerce.number().int().min(1).max(10).default(8),
 });
 
 const latlonSchema = z.object({
@@ -32,7 +28,9 @@ const latlonSchema = z.object({
 // ----------- ROUTE CITY SEARCH -----------
 app.get("/api/city/search", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
-  const { q, limit } = qSchema.parse(params);
+  const parsed = qSchema.safeParse(params);
+  if (!parsed.success) return c.json({ error: "Invalid query parameters" }, 400);
+  const { q, limit } = parsed.data;
 
   const url = new URL("https://nominatim.openstreetmap.org/search");
   url.searchParams.set("format", "json");
@@ -51,9 +49,15 @@ app.get("/api/city/search", async (c) => {
     return c.json([], 200);
   }
 
-  const raw = await res.json();
+  const raw: unknown = await res.json();
 
-  const out = (Array.isArray(raw) ? raw : []).map((it: any, i: number) => {
+  const out = (Array.isArray(raw) ? raw : []).map((item: unknown, i: number) => {
+    const it = item as {
+      address?: { city?: string; town?: string; village?: string; country?: string };
+      display_name?: string;
+      lat?: string | number;
+      lon?: string | number;
+    };
     const name =
       it.address?.city ||
       it.address?.town ||
@@ -79,7 +83,9 @@ app.get("/api/city/search", async (c) => {
 // ----------- ROUTE WEATHER -----------
 app.get("/api/weather", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
-  const { lat, lon } = latlonSchema.parse(params);
+  const parsed = latlonSchema.safeParse(params);
+  if (!parsed.success) return c.json({ error: "Invalid coordinates" }, 400);
+  const { lat, lon } = parsed.data;
 
   const url = new URL("https://api.open-meteo.com/v1/forecast");
   url.searchParams.set("latitude", String(lat));
@@ -90,6 +96,7 @@ app.get("/api/weather", async (c) => {
   url.searchParams.set("timezone", "auto");
 
   const res = await fetch(url.toString());
+  if (!res.ok) return c.json({ error: "Weather provider unavailable" }, 502);
   const data = await res.json();
   return c.json(data);
 });
@@ -97,7 +104,9 @@ app.get("/api/weather", async (c) => {
 // ----------- ROUTE AIR QUALITY -----------
 app.get("/api/air", async (c) => {
   const params = Object.fromEntries(new URL(c.req.url).searchParams);
-  const { lat, lon } = latlonSchema.parse(params);
+  const parsed = latlonSchema.safeParse(params);
+  if (!parsed.success) return c.json({ error: "Invalid coordinates" }, 400);
+  const { lat, lon } = parsed.data;
 
   const url = new URL("https://air-quality-api.open-meteo.com/v1/air-quality");
   url.searchParams.set("latitude", String(lat));
@@ -106,6 +115,7 @@ app.get("/api/air", async (c) => {
   url.searchParams.set("timezone", "auto");
 
   const res = await fetch(url.toString());
+  if (!res.ok) return c.json({ error: "Air quality provider unavailable" }, 502);
   const data = await res.json();
   return c.json(data);
 });

@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import { createPinia } from "pinia";
 import "./styles/index.css";
+import "leaflet/dist/leaflet.css";
 import { usePrefs } from "@/stores/prefs";
 
 const app = createApp(App);

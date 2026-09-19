@@ -1,266 +1,91 @@
 # CityPulse
 
-CityPulse is a small Vue 3 + TypeScript web app that helps compare basic environmental
-information (weather, air quality) between cities. It fetches data from public APIs
-and normalizes results to friendly models for the UI.
+CityPulse is a Vue 3 web application for searching cities and viewing weather and air quality data. It also supports city comparisons, favorites, saved preferences, map display, and printable city reports.
 
-Quick links
-- Stack: Vue 3 + Vite + TypeScript + Pinia
-- Tests: Vitest (unit), Playwright (E2E)
-- CI: GitHub Actions (lint / type-check / tests / build)
+## Stack
 
-Getting started (dev)
+- Vue 3, TypeScript, Vite, Vue Router, and Pinia
+- Tailwind CSS and PostCSS
+- Axios and Zod for HTTP access and response validation
+- Leaflet for maps
+- Chart.js and vue-chartjs for data visualization
+- Hono on Node.js for the API proxy
+- Vitest for unit tests and Playwright for end-to-end tests
 
-1. Install dependencies
+## Data sources
 
-```powershell
+The Node API under `apps/api` proxies these public services:
+
+- Nominatim for city search
+- Open-Meteo Forecast API for weather
+- Open-Meteo Air Quality API for air data
+
+## Requirements
+
+- Node.js `^20.19.0` or `>=22.12.0`
+- npm
+
+## Setup
+
+```bash
 npm ci
-```
-
-2. Run dev server
-
-```powershell
-npm run dev
-```
-
-3. Run unit tests
-
-```powershell
-npm run test:unit
-```
-
-4. Run E2E tests (Playwright)
-
-Start dev server in one terminal then run in another:
-
-```powershell
-npx playwright test -j 1
-```
-
-Project layout
-- src/: application source
-  - components/: Vue components
-  - features/: higher-level features (CitySearch, etc.)
-  - pages/: route pages (City.vue, Compare.vue)
-  - services/: API wrappers and normalization (weather.service.ts, air.service.ts, geo.service.ts)
-  - stores/: Pinia stores
-
-Conventions & notes
-- API responses are validated with zod where possible. The app includes small
-  fallbacks and caching (IndexedDB via idb-keyval) to make unit testing and
-  offline behaviour more robust.
-- Playwright E2E tests use route-based mocks (tests/e2e/_mocks.ts) to make
-  CI deterministic.
-
-Contributing
-- Please run linters and tests before opening a PR.
-
-License
-- MIT (add LICENSE file in project root if you want a copy bundled)
-# CityPulse
-
-CityPulse est une application **Vue 3 + TypeScript + Vite** qui affiche des **données urbaines en temps réel** (météo, qualité de l’air, etc.) avec **Leaflet** (carte) et **Chart.js** (graphiques).  
-Objectif : fournir un front moderne, performant et accessible, prêt à connecter des APIs publiques.
-
----
-
-## 🧱 Stack technique
-
-- **Vue 3** (Composition API) + **Vite**
-- **TypeScript** strict
-- **Pinia** (state) + **Vue Router**
-- **TailwindCSS** (via PostCSS)
-- **Leaflet** (cartes OpenStreetMap)
-- **Chart.js** (dataviz) + **vue-chartjs**
-- **Axios** + **Zod** (HTTP + validation de schémas)
-- Tests : **Vitest** (+ Playwright optionnel pour e2e)
-- CI : GitHub Actions (lint, test, build)
-
----
-
-## 🚀 Démarrage rapide
-
-```bash
-# Installer les dépendances
-npm i
-
-# Copier l'exemple d'environnement
 cp .env.example .env
-
-# Lancer le serveur de dev
+npm run dev:api
 npm run dev
 ```
 
-Par défaut, Vite démarre sur **http://localhost:5173/**.
+The web application runs at `http://localhost:5173`. The API runs at `http://localhost:8787` by default. Set `VITE_API_BASE` to the API origin when they are served separately.
 
-> Sous Windows PowerShell, la commande `cp` peut être remplacée par :
-> ```powershell
-> Copy-Item ".env.example" ".env"
-> ```
+## Environment variables
 
----
+| Variable | Used by | Purpose |
+| --- | --- | --- |
+| `VITE_API_BASE` | Web application | Base URL for CityPulse API requests |
+| `VITE_MAP_TILE_URL` | Web application | Leaflet tile URL template |
+| `ALLOWED_ORIGIN` | Node API | Browser origin allowed by CORS |
+| `PORT` | Node API | API listening port; defaults to `8787` |
 
-## ⚙️ Scripts NPM
+Only placeholders belong in `.env.example`. Local `.env` files are ignored by Git.
 
-- `npm run dev` – Lance le serveur Vite (développement)
-- `npm run build` – Build production
-- `npm run preview` – Prévisualise le build prod
-- `npm run test` – Exécute Vitest (unitaires)
-
----
-
-## 🔑 Variables d’environnement
-
-Fichier **`.env.example`** :
-
-```env
-# Base URL pour un proxy (facultatif). Laisser "/" pour appels directs.
-VITE_API_BASE="/"
-
-# Tuile de carte Leaflet (OpenStreetMap)
-VITE_MAP_TILE_URL="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-```
-
-Copier ce fichier en `.env` et adapter selon vos besoins.
-
----
-
-## 🗂️ Structure de base (front)
-
-```
-src/
-  components/
-    city/
-    charts/
-    common/
-  features/
-    search/
-  pages/
-    Home.vue
-    City.vue
-    Compare.vue
-    Favorites.vue
-  router/
-    index.ts
-  services/
-    http.ts
-    geo.service.ts
-    weather.service.ts
-    air.service.ts
-  stores/
-  styles/
-    index.css
-    theme.css
-  types/
-    city.ts
-    weather.ts
-    air.ts
-```
-
----
-
-## 🧭 Roadmap (extrait)
-
-- **P1 (MVP)** : recherche de ville (autocomplete), météo actuelle + 7j, air (AQI), carte Leaflet, comparaison 2 villes, responsive, erreurs réseau gérées.
-- **P2 (UX/Data)** : graphiques (températures, pollution), favoris, cache IndexedDB (SWR), scores Teleport.
-- **P3 (Prod)** : PWA (SW + manifest), partage d’URL compare, export PDF, CI/CD + déploiement.
-
----
-
-## 🆘 Dépannage – Erreur Tailwind/PostCSS
-
-Si, lors du `npm run dev`, vous voyez :
-
-```
-[postcss] It looks like you're trying to use `tailwindcss` directly as a PostCSS plugin.
-The PostCSS plugin has moved to a separate package...
-```
-
-Cela signifie que Tailwind **doit** maintenant être chargé via le **plugin PostCSS dédié**.
-
-### ✅ Correctif
-
-1) **Installer le plugin PostCSS officiel** :
+## Commands
 
 ```bash
-npm i -D @tailwindcss/postcss autoprefixer
+npm run dev             # Vite development server
+npm run dev:api         # Hono API server
+npm run lint            # ESLint
+npm run type-check      # TypeScript and Vue type checks
+npm run test:unit -- --run
+npm run test:coverage
+npm run test:e2e
+npm run build
+npm run preview
 ```
 
-2) **Mettre à jour `postcss.config.js`** au format ESM :
-
-```js
-// postcss.config.js
-import tailwindcss from "@tailwindcss/postcss";
-import autoprefixer from "autoprefixer";
-
-export default {
-  plugins: [
-    tailwindcss(),
-    autoprefixer(),
-  ],
-};
-```
-
-> Remplacez l’ancienne config :
-> ```js
-> export default {
->   plugins: {
->     tailwindcss: {},
->     autoprefixer: {},
->   },
-> }
-> ```
-> par la nouvelle ci-dessus.
-
-3) **Vérifier vos styles** : conservez les directives dans `src/styles/theme.css` / `index.css` :
-```css
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
-
-4) **Relancer le serveur** :
-```bash
-npm run dev
-```
-
-> Si l’erreur persiste, supprimez le cache Vite/Node et réinstallez :
-> ```bash
-> rm -rf node_modules .vite
-> npm i
-> npm run dev
-> ```
-> Sous Windows PowerShell :
-> ```powershell
-> Remove-Item "node_modules" -Recurse -Force
-> Remove-Item "node_modules/.vite" -Recurse -Force -ErrorAction SilentlyContinue
-> npm i
-> npm run dev
-> ```
-
----
-
-## 🧪 Tests
+Install the Playwright browsers once before running the end-to-end suite:
 
 ```bash
-# Unitaires
-npm run test
-
-# E2E (optionnel si Playwright est configuré)
-# npx playwright install
-# npm run test:e2e
+npx playwright install chromium firefox
 ```
 
----
+## Project structure
 
-## 🔒 Qualité & CI
+```text
+apps/api/               Hono API proxy
+public/                 PWA manifest, icons, and service worker
+src/components/         Reusable Vue components
+src/features/           Reusable feature modules
+src/pages/              Route-level views
+src/services/           HTTP, caching, and data normalization
+src/stores/             Pinia state and persisted preferences
+tests/                  Unit and Playwright end-to-end tests
+```
 
-- ESLint + Prettier + TypeScript strict
-- GitHub Actions : lint → test → build
-- Lighthouse (cibles 90+ sur Performance / A11y / Best Practices / SEO)
+Weather and air results use a stale-while-revalidate cache backed by IndexedDB, with an in-memory fallback when IndexedDB is unavailable. Playwright intercepts API routes so end-to-end tests remain deterministic.
 
----
+## PWA
 
-## 📄 Licence
+The production build registers `public/sw.js`. The manifest and supplied icon sizes support installation, and the service worker caches application and API responses for basic offline use.
 
-MIT
+## License
+
+This repository currently has no license file. Standard copyright restrictions therefore apply until the owner adds an explicit license.

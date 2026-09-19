@@ -24,8 +24,8 @@ export async function searchCities(q: string, limit = 8): Promise<City[]> {
       if (s.startsWith("[") || s.startsWith("{")) {
         try {
           raw = JSON.parse(s);
-        } catch (e) {
-          console.error("[CityPulse] /api/city/search: JSON.parse failed", e, s);
+        } catch (error) {
+          console.error("[CityPulse] /api/city/search: JSON.parse failed", error, s);
           return [];
         }
       } else {
@@ -51,7 +51,7 @@ export async function searchCities(q: string, limit = 8): Promise<City[]> {
           });
           const reparsed = z.array(CitySchema).safeParse(maybe);
           if (reparsed.success) return reparsed.data;
-        } catch (e) {
+        } catch {
           // fallthrough to default error
         }
       }

@@ -2,41 +2,49 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  lint-test-build:
-    name: Lint, Typecheck, Test & Build
+  quality:
+    name: Lint, typecheck, test, build, and E2E
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [20]
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          node-version: 22
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
       - name: Lint
-        run: npm run lint --if-present || echo "Lint failed or not compatible in CI — skipping for now"
+        run: npm run lint
 
       - name: Typecheck
         run: npm run type-check
 
-      - name: Run unit tests
-        run: npm run test:unit -- --run
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
 
       - name: Build production bundle
         run: npm run build
-  # deploy-pages job removed temporarily to avoid deprecated artifact action failure
-  # You can re-enable deployment with a modern pages deploy action once ESLint and build are stable.
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox
+
+      - name: Run end-to-end tests
+        run: npm run test:e2e

@@ -1,6 +1,7 @@
 import { render, fireEvent, screen } from "@testing-library/vue";
 import { describe, it, expect, vi } from "vitest";
-import CitySearch from "@/components/city/CitySearch.vue";
+import { createMemoryHistory, createRouter } from "vue-router";
+import CitySearch from "@/features/search/CitySearch.vue";
 import * as geo from "@/services/geo.service";
 
 vi.spyOn(geo, "searchCities").mockResolvedValue([
@@ -15,9 +16,8 @@ vi.spyOn(geo, "searchCities").mockResolvedValue([
 
 describe("CitySearch", () => {
   it("renders input and shows results", async () => {
-    const user = userEvent();
-
-    const { container } = render(CitySearch);
+    const router = createRouter({ history: createMemoryHistory(), routes: [] });
+    const { container } = render(CitySearch, { global: { plugins: [router] } });
 
     const input = screen.getByPlaceholderText(/rechercher une ville/i);
     await fireEvent.update(input, "Paris");

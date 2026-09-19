@@ -26,19 +26,13 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherSumma
   const key = `weather:${lat.toFixed(3)},${lon.toFixed(3)}`;
   const ttl = 24 * 60 * 60 * 1000; // 24h
   return cacheSWR(key, async () => {
-  // debug: inspect http.get to ensure tests' mocks are applied
-  // eslint-disable-next-line no-console
-  console.log("[weather.service] http.get type:", typeof (http as any).get, "keys:", Object.keys((http as any).get || {}));
-  const resp = await http.get("/api/weather", { params: { lat, lon } });
+    const resp = await http.get("/api/weather", { params: { lat, lon } });
     const data = (resp as any)?.data ?? {};
-  // debug: tests may mock http.get — log data to help understand failures
-  // eslint-disable-next-line no-console
-  console.log("[weather.service] fetched data:", data);
 
     let p: any;
     try {
       p = Schema.parse(data);
-    } catch (e) {
+    } catch {
       // Be lenient for tests / partial responses: build a minimal shape
       const d: any = data || {};
       p = {
@@ -94,7 +88,6 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherSumma
       },
       daily,
       hourly,
-      // include raw response data for compatibility/debugging in tests
       raw: data,
     } as any;
   }, ttl);
@@ -102,18 +95,9 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherSumma
 
 // Backwards-compatible alias used by older tests/imports
 export async function getWeatherSummary(lat: number, lon: number) {
-  // Backwards-compatible helper: query the http endpoint directly and build a
-  // compact summary. This keeps older tests simple (they mock http.get) and
-  // avoids double-mocking issues.
-  // dynamically import http so tests that mock the module are honored
   const mod = await import("@/services/http");
-  // debug: compare mocked http from test import vs dynamic import
-  // eslint-disable-next-line no-console
-  console.log("[weather.service] dynamic http.get typeof:", typeof mod.http.get, "equal to static http?", (mod as any).http === (http as any));
   const resp = await mod.http.get("/api/weather", { params: { lat, lon } });
   const d = (resp as any)?.data ?? {};
-  // eslint-disable-next-line no-console
-  console.log('[weather.service] raw d.daily =>', d.daily);
 
   const currentTemp = Number(d.current?.temperature_2m ?? d.current?.temp ?? 0);
   const feels = d.current?.apparent_temperature ?? d.current?.feels ?? currentTemp;

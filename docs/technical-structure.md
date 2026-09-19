@@ -1,22 +1,13 @@
 # Technical structure
 
-This document explains the high-level structure of the CityPulse repository.
+- `apps/api/`: Hono server for city search, weather, and air quality proxy routes.
+- `src/components/`: reusable Vue components.
+- `src/features/`: reusable feature modules such as city search.
+- `src/pages/`: route-level pages for home, city details, comparisons, and favorites.
+- `src/services/`: Axios client, IndexedDB cache, and API response normalization.
+- `src/stores/`: Pinia preferences and notifications.
+- `tests/`: unit and Playwright end-to-end tests.
 
-Top-level folders
-- src/: application sources.
-  - components/: small, reusable Vue components.
-  - features/: highest-level reusable UI features (e.g. `CitySearch`).
-  - pages/: route-level pages (Home.vue, City.vue, Compare.vue).
-  - services/: HTTP layer and API normalization services (weather, air, geo, teleport).
-  - stores/: Pinia stores (app, prefs, toast, favorites).
-  - styles/: central styling and theme variables.
+`src/services/http.ts` configures the API base URL and retry behavior. `src/services/cache.ts` provides stale-while-revalidate caching through `idb-keyval`, with an in-memory fallback for test environments.
 
-Key files
-- `src/services/http.ts` — axios instance, baseURL, retry interceptor.
-- `src/services/cache.ts` — SWR-like cache using `idb-keyval`, with an in-memory fallback for tests.
-- `src/services/weather.service.ts` — normalizes Open-Meteo responses to `WeatherSummary`.
-- `tests/` — unit & e2e tests.
-
-Notes for maintainers
-- Follow existing TypeScript and ESLint conventions. The project uses `vue-tsc` for type-checking.
-- Tests are run with Vitest (jsdom). E2E tests are in `tests/e2e` and use Playwright. E2E tests include mocked API routes for determinism.
+Type checking uses `vue-tsc` for the web application and the referenced TypeScript project for `apps/api`. End-to-end tests mock external API routes for deterministic CI runs.

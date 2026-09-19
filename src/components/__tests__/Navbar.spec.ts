@@ -9,7 +9,7 @@ describe('Navbar', () => {
   it('renders brand and links', () => {
     const wrapper = mount(Navbar, { global })
     const text = wrapper.text()
-    expect(text).toContain('CityPulse')
+    expect(wrapper.get('img').attributes('alt')).toBe('CityPulse')
     expect(text).toContain('Home')
     expect(text).toContain('Compare')
     expect(text).toContain('Favorites')
