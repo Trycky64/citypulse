@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { searchCities } from "@/services/geo.service";
 import { http } from "@/services/http";
 
@@ -13,6 +13,7 @@ describe("geo.service searchCities", () => {
 
   beforeEach(() => {
     mockedGet.mockReset();
+    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   it("returns [] when query is empty", async () => {
@@ -21,31 +22,89 @@ describe("geo.service searchCities", () => {
     expect(mockedGet).not.toHaveBeenCalled();
   });
 
-  it("normalizes API response", async () => {
-    mockedGet.mockResolvedValueOnce({
+  it("accepts the normalized API schema", async () => {
+    mockedGet.mockResolvedValue({
       data: [
         {
+          id: "paris",
+          name: "Paris",
+          country: "France",
           lat: 48.8566,
           lon: 2.3522,
+        },
+      ],
+    });
+
+    await expect(searchCities("Paris", 5)).resolves.toEqual([
+      {
+        id: "paris",
+        name: "Paris",
+        country: "France",
+        lat: 48.8566,
+        lon: 2.3522,
+      },
+    ]);
+    expect(mockedGet).toHaveBeenCalledWith("/api/city/search", {
+      params: { q: "Paris", limit: 5 },
+    });
+  });
+
+  it("normalizes a Nominatim-style response", async () => {
+    mockedGet.mockResolvedValue({
+      data: [
+        {
+          place_id: 123,
+          lat: "48.8566",
+          lon: "2.3522",
           address: { city: "Paris", country: "France" },
         },
       ],
     });
 
-    const res = await searchCities("Paris", 5);
-    expect(res).toHaveLength(1);
-    expect(res[0]).toMatchObject({
-      name: "Paris",
-      country: "France",
-      lat: 48.8566,
-      lon: 2.3522,
-    });
+    const res = await searchCities("Paris");
+
+    expect(res).toEqual([
+      {
+        id: "123",
+        name: "Paris",
+        country: "France",
+        lat: 48.8566,
+        lon: 2.3522,
+      },
+    ]);
   });
 
-  it("handles non-array response", async () => {
-    mockedGet.mockResolvedValueOnce({ data: { foo: "bar" } });
+  it("parses JSON string responses", async () => {
+    mockedGet.mockResolvedValue({
+      data: JSON.stringify([
+        {
+          id: "bordeaux",
+          name: "Bordeaux",
+          country: "France",
+          lat: 44.8378,
+          lon: -0.5792,
+        },
+      ]),
+    });
 
-    const res = await searchCities("X");
-    expect(res).toEqual([]);
+    const res = await searchCities("Bordeaux");
+
+    expect(res[0]?.name).toBe("Bordeaux");
+  });
+
+  it("rejects malformed and non-JSON string responses", async () => {
+    mockedGet.mockResolvedValueOnce({ data: "[invalid" });
+    await expect(searchCities("X")).resolves.toEqual([]);
+
+    mockedGet.mockResolvedValueOnce({ data: "<html>maintenance</html>" });
+    await expect(searchCities("X")).resolves.toEqual([]);
+  });
+
+  it("handles invalid schemas and request failures", async () => {
+    mockedGet.mockResolvedValueOnce({ data: { foo: "bar" } });
+    await expect(searchCities("X")).resolves.toEqual([]);
+
+    mockedGet.mockRejectedValueOnce(new Error("network"));
+    await expect(searchCities("X")).resolves.toEqual([]);
   });
 });

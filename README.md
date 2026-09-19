@@ -88,4 +88,4 @@ The production build registers `public/sw.js`. The manifest and supplied icon si
 
 ## License
 
-This repository currently has no license file. Standard copyright restrictions therefore apply until the owner adds an explicit license.
+CityPulse is released under the MIT License. See [LICENSE](LICENSE).
